@@ -6,43 +6,12 @@
     xmlns:h="http://java.sun.com/jsf/html"
     xmlns:f="http://java.sun.com/jsf/core">
 
-<f:loadBundle basename="resources.application" var="msg"/>
+  <ui:composition template="/templates/default/main.xhtml">
+      <ui:define name="content">
+        <!-- Main component for a primary marketing message or call to action -->
 
-<h:head>
-    <title><h:outputText value="#{msg.welcomeTitle}" /></title>
-    <h:outputStylesheet library="bootstrap" name="css/bootstrap.css"  />
-</h:head>
-
-<body>
-	<nav class="navbar navbar-default navbar-static-top" role="navigation">
-      <div class="container">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="#">Calculator</a>
-        </div>
-        <div id="navbar" class="navbar-collapse collapse">
-          <ul class="nav navbar-nav">
-            <li class="active"><a href="#">Home</a></li>
-            <li><a href="#about">About</a></li>
-          </ul>
-        </div><!--/.nav-collapse -->
-      </div>
-    </nav>
-
-    <div class="container">
-      <!-- Main component for a primary marketing message or call to action -->
-
-      <h3><h:outputText value="#{msg.welcomeHeading}" /></h3>
-      <p><h:outputText value="#{msg.welcomeMessage}" /></p>
-
-      <table>
-
-      </table>
-    </div> <!-- /container -->
-</body>
+        <h3><h:outputText value="#{msg.welcomeHeading}" /></h3>
+        <p><h:outputText value="#{msg.welcomeMessage}" /></p>
+      </ui:define>
+  </ui:composition>
 </html>
