@@ -1,4 +1,4 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <html xmlns="http://www.w3.org/1999/xhtml"
@@ -8,12 +8,41 @@
 
 <f:loadBundle basename="resources.application" var="msg"/>
 
-<head>
+<h:head>
     <title><h:outputText value="#{msg.welcomeTitle}" /></title>
-</head>
+    <h:outputStylesheet library="bootstrap" name="css/bootstrap.css"  />
+</h:head>
 
 <body>
-<h3><h:outputText value="#{msg.welcomeHeading}" /></h3>
-<p><h:outputText value="#{msg.welcomeMessage}" /></p>
+	<nav class="navbar navbar-default navbar-static-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">Calculator</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="#">Home</a></li>
+            <li><a href="#about">About</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+
+    <div class="container">
+      <!-- Main component for a primary marketing message or call to action -->
+
+      <h3><h:outputText value="#{msg.welcomeHeading}" /></h3>
+      <p><h:outputText value="#{msg.welcomeMessage}" /></p>
+
+      <table>
+
+      </table>
+    </div> <!-- /container -->
 </body>
 </html>
