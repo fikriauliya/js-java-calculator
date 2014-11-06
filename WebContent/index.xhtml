@@ -10,8 +10,64 @@
       <ui:define name="content">
         <!-- Main component for a primary marketing message or call to action -->
 
-        <h3><h:outputText value="#{msg.welcomeHeading}" /></h3>
-        <p><h:outputText value="#{msg.welcomeMessage}" /></p>
+        <table>
+          <tbody>
+            <tr>
+              <td colspan="8">
+                <input type="text" style="width: 100%;"></input>
+              </td>
+            </tr>
+            <tr>
+              <td id="asin"><button type="button" class="btn btn-success">asin</button></td>
+              <td id="sin"><button type="button" class="btn btn-success">sin</button></td>
+              <td id="lb"><button type="button" class="btn btn-success">(</button></td>
+              <td id="rb"><button type="button" class="btn btn-success">)</button></td>
+              <td id="backspace"><button type="button" class="btn btn-default">BS</button></td>
+              <td id="clear"><button type="button" class="btn btn-default">CE</button></td>
+              <td id="percent"><button type="button" class="btn btn-default">%</button></td>
+              <td id="add"><button type="button" class="btn btn-info">+</button></td>
+            </tr>
+            <tr>
+              <td id="acos"><button type="button" class="btn btn-success">acos</button></td>
+              <td id="cos"><button type="button" class="btn btn-success">cos</button></td>
+              <td id="exp"><button type="button" class="btn btn-success">^</button></td>
+              <td id="fact"><button type="button" class="btn btn-success">!</button></td>
+              <td id="_7"><button type="button" class="btn btn-default">7</button></td>
+              <td id="_8"><button type="button" class="btn btn-default">8</button></td>
+              <td id="_9"><button type="button" class="btn btn-default">9</button></td>
+              <td id="div"><button type="button" class="btn btn-info">/</button></td>
+            </tr>
+            <tr>
+              <td id="atan"><button type="button" class="btn btn-success">atan</button></td>
+              <td id="tan"><button type="button" class="btn btn-success">tan</button></td>
+              <td id="sqrt"><button type="button" class="btn btn-success">2&radic;</button></td>
+              <td id="root"><button type="button" class="btn btn-success">y&radic;</button></td>
+              <td id="_4"><button type="button" class="btn btn-default">4</button></td>
+              <td id="_5"><button type="button" class="btn btn-default">5</button></td>
+              <td id="_6"><button type="button" class="btn btn-default">6</button></td>
+              <td id="mult"><button type="button" class="btn btn-info">*</button></td>
+            </tr>
+            <tr>
+              <td id="round"><button type="button" class="btn btn-success">round</button></td>
+              <td id="mod"><button type="button" class="btn btn-success">mod</button></td>
+              <td id="log"><button type="button" class="btn btn-success">log</button></td>
+              <td id="pi"><button type="button" class="btn btn-default">pi</button></td>
+              <td id="_1"><button type="button" class="btn btn-default">1</button></td>
+              <td id="_2"><button type="button" class="btn btn-default">2</button></td>
+              <td id="_3"><button type="button" class="btn btn-default">3</button></td>
+              <td id="substract"><button type="button" class="btn btn-info">-</button></td>
+            </tr>
+            <tr>
+              <td id="ceil"><button type="button" class="btn btn-success">ceil</button></td>
+              <td id="floor"><button type="button" class="btn btn-success">floor</button></td>
+              <td id="ln"><button type="button" class="btn btn-success">ln</button></td>
+              <td id="e"><button type="button" class="btn btn-default">e</button></td>
+              <td id="_0" colspan="2"><button type="button" class="btn btn-default">0</button></td>
+              <td id="dot"><button type="button" class="btn btn-default">.</button></td>
+              <td id="calculate"><button type="button" class="btn btn-primary">=</button></td>
+            </tr>
+          </tbody>
+        </table>
       </ui:define>
   </ui:composition>
 </html>
