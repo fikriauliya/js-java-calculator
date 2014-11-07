@@ -21,6 +21,9 @@ $(function() {
 	}
 
 	var root = function(number, degree) {
+		if (typeof number == 'undefined' || typeof degree === 'undefined') {
+			throw "Invalid parameter";
+		}
 		return Math.pow(number, 1.0/(degree*1.0));
 	}
 
