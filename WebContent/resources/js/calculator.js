@@ -27,6 +27,10 @@ $(function() {
 		return Math.log(number) / Math.log(10);
 	}
 
+	var isOperator = function(s) {
+		return (s == "+" || s == "-" || s == "*" || s == "/");
+	}
+
 	$("#asin").click(function() {
 		outputText += " asin(";
 		descriptionText = "<b>asin(number)</b>: Calculate arcsine of a number"
@@ -219,7 +223,7 @@ $(function() {
 	});
 	$("#calculate").click(function() {
 		var inp = $("#outputText").val();
-		
+
 		//replace ^ to Math.pow
 		var powPos = inp.lastIndexOf(" ^ ");
 		while (powPos != -1) {
@@ -270,19 +274,33 @@ $(function() {
 		}
 
 		inp = inp.replace(/ x /g, " * ");
-		inp = inp.replace(/ asin/g, " Math.asin ");
-		inp = inp.replace(/ sin/g, " Math.sin ");
-		inp = inp.replace(/ acos/g, " Math.acos ");
-		inp = inp.replace(/ cos/g, " Math.cos ");
-		inp = inp.replace(/ atan/g, " Math.atan ");
-		inp = inp.replace(/ tan/g, " Math.tan ");
-		inp = inp.replace(/ sqrt/g, " Math.sqrt ");
-		inp = inp.replace(/ round/g, " Math.round ");
-		inp = inp.replace(/ ceil/g, " Math.ceil ");
-		inp = inp.replace(/ floor/g, " Math.floor ");
-		inp = inp.replace(/ ln/g, " Math.log ");
+		inp = inp.replace(/ asin/g, " Math.asin");
+		inp = inp.replace(/ sin/g, " Math.sin");
+		inp = inp.replace(/ acos/g, " Math.acos");
+		inp = inp.replace(/ cos/g, " Math.cos");
+		inp = inp.replace(/ atan/g, " Math.atan");
+		inp = inp.replace(/ tan/g, " Math.tan");
+		inp = inp.replace(/ sqrt/g, " Math.sqrt");
+		inp = inp.replace(/ round/g, " Math.round");
+		inp = inp.replace(/ ceil/g, " Math.ceil");
+		inp = inp.replace(/ floor/g, " Math.floor");
+		inp = inp.replace(/ ln/g, " Math.log");
 		inp = inp.replace(/ e /g, " Math.E ");
 		inp = inp.replace(/ pi /g, " Math.PI ");
+
+		inp = inp.trim();
+		console.log(inp);
+
+		spacePos = inp.indexOf(" ");
+		while (spacePos != -1) {
+			if (spacePos > 0 && spacePos < (inp.length - 1) &&
+					inp.charAt(spacePos-1) != "(" && !isOperator(inp.charAt(spacePos-1)) &&
+					inp.charAt(spacePos+1) != ")" && !isOperator(inp.charAt(spacePos+1))) {
+				inp = inp.substring(0, spacePos) + "*" + inp.substring(spacePos+1);
+				console.log(inp);
+			}
+			spacePos = inp.indexOf(" ", spacePos + 1);
+		}
 
 		console.log(inp);
 		descriptionText = "";
