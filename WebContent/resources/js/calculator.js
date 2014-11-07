@@ -4,6 +4,7 @@ $(function() {
 
 	var refreshOutputs = function() {
 		console.log(outputText);
+		outputText = String(outputText).replace(/\s{2,}/g, " ");
 		$("#outputText").val(outputText);
 		$("#descriptionText").html(descriptionText);
 	}
@@ -42,12 +43,12 @@ $(function() {
 		refreshOutputs();
 	});
 	$("#lb").click(function() {
-		outputText += "(";
+		outputText += " (";
 		descriptionText = "";
 		refreshOutputs();
 	});
 	$("#rb").click(function() {
-		outputText += ")";
+		outputText += ") ";
 		descriptionText = "";
 		refreshOutputs();
 	});
@@ -207,7 +208,7 @@ $(function() {
 		refreshOutputs();
 	});
 	$("#comma").click(function() {
-		outputText += ", ";
+		outputText += ",";
 		descriptionText = "";
 		refreshOutputs();
 	});
@@ -289,6 +290,7 @@ $(function() {
 		inp = inp.replace(/ pi /g, " Math.PI ");
 
 		inp = inp.trim();
+		inp = inp.replace(/\s{2,}/g, " ");
 		console.log(inp);
 
 		spacePos = inp.indexOf(" ");
@@ -308,7 +310,7 @@ $(function() {
 		try {
 			outputText = eval(inp);
 		} catch (err) {
-			outputText = "Error";
+			outputText = "Invalid";
 		}
 		refreshOutputs();
 	});
