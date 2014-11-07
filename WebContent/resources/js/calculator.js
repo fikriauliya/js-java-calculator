@@ -8,6 +8,25 @@ $(function() {
 		$("#descriptionText").html(descriptionText);
 	}
 
+	var fact = function(number) {
+		if (number == 0) return 0;
+		if (number < 0) return -1 * fact(Math.abs(number));
+
+		var res = 1;
+		for (var i = 2;i<=number;i++){
+			res = res * i;
+		}
+		return res;
+	}
+
+	var root = function(number, degree) {
+		return Math.pow(number, 1.0/(degree*1.0));
+	}
+
+	var log = function(number) {
+		return Math.log(number) / Math.log(10);
+	}
+
 	$("#asin").click(function() {
 		outputText += " asin(";
 		descriptionText = "<b>asin(number)</b>: Calculate arcsine of a number"
@@ -54,8 +73,8 @@ $(function() {
 		refreshOutputs();
 	});
 	$("#exp").click(function() {
-		outputText += " pow(";
-		descriptionText = "<b>pow(base, exponent)</b>: Calculate <b><i>base</i></b> to the power of <b><i>exponent</i></b>";
+		outputText += " ^ ";
+		descriptionText = "";
 		refreshOutputs();
 	});
 	$("#fact").click(function() {
@@ -199,7 +218,80 @@ $(function() {
 		refreshOutputs();
 	});
 	$("#calculate").click(function() {
-		outputText += "calculate";
+		var inp = $("#outputText").val();
+		
+		//replace ^ to Math.pow
+		var powPos = inp.lastIndexOf(" ^ ");
+		while (powPos != -1) {
+			var i = powPos - 1;
+			var closeTagCount = 0;
+			var openTagCount = 0;
+
+			var prevTokenStart = -1;
+			var nextTokenEnd = inp.length;
+
+			while (i >= 0) {
+				if (inp.charAt(i) == ")") {
+					closeTagCount++;
+				} else if (inp.charAt(i) == "(") {
+					openTagCount++;
+				} else if ((inp.charAt(i) == " ") && (openTagCount == closeTagCount)){
+					prevTokenStart = i;
+					break;
+				}
+				i--;
+			}
+			var i = powPos + 3;
+			closeTagCount = 0;
+			openTagCount = 0;
+			while (i < inp.length) {
+				if (inp.charAt(i) == ")") {
+					closeTagCount++;
+				} else if (inp.charAt(i) == "(") {
+					openTagCount++;
+				} else if ((inp.charAt(i) == " ") && (openTagCount == closeTagCount)){
+					nextTokenEnd = i;
+					break;
+				}
+				i++;
+			}
+
+			// TODO: Handle invalid tokenPos
+
+			console.log(prevTokenStart);
+			console.log(nextTokenEnd);
+
+			inp1 = inp.substring(0, prevTokenStart + 1) + "Math.pow(" + inp.substring(prevTokenStart + 1, powPos) + ",";
+			inp2 = inp.substring(powPos + 3, nextTokenEnd) + ")" + inp.substring(nextTokenEnd);
+			inp = inp1 + inp2;
+
+			console.log("[" + inp + "]");
+			powPos = inp.lastIndexOf(" ^ ");
+		}
+
+		inp = inp.replace(/ x /g, " * ");
+		inp = inp.replace(/ asin/g, " Math.asin ");
+		inp = inp.replace(/ sin/g, " Math.sin ");
+		inp = inp.replace(/ acos/g, " Math.acos ");
+		inp = inp.replace(/ cos/g, " Math.cos ");
+		inp = inp.replace(/ atan/g, " Math.atan ");
+		inp = inp.replace(/ tan/g, " Math.tan ");
+		inp = inp.replace(/ sqrt/g, " Math.sqrt ");
+		inp = inp.replace(/ round/g, " Math.round ");
+		inp = inp.replace(/ ceil/g, " Math.ceil ");
+		inp = inp.replace(/ floor/g, " Math.floor ");
+		inp = inp.replace(/ ln/g, " Math.log ");
+		inp = inp.replace(/ e /g, " Math.E ");
+		inp = inp.replace(/ pi /g, " Math.PI ");
+
+		console.log(inp);
+		descriptionText = "";
+
+		try {
+			outputText = eval(inp);
+		} catch (err) {
+			outputText = "Error";
+		}
 		refreshOutputs();
 	});
 })
