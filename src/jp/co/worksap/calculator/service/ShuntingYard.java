@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Stack;
 import java.util.regex.Pattern;
 
+import jp.co.worksap.calculator.utils.CommonUtilities;
+
 public class ShuntingYard {
 	public static List<String> parseShuntingYard(String infix) {
     	List<String> res = new LinkedList<String>();
@@ -54,8 +56,8 @@ public class ShuntingYard {
 				res.add(token);
     		}
 
-    		System.out.print(" | " + listToString(operatorsStack));
-    		System.out.println(" | " + listToString(res));
+    		System.out.print(" | " + CommonUtilities.listToString(operatorsStack));
+    		System.out.println(" | " + CommonUtilities.listToString(res));
     	}
 
     	while (!operatorsStack.isEmpty()) {
@@ -66,11 +68,11 @@ public class ShuntingYard {
     }
 
     public static void main(String[] args) {
-        String infix = "sin ( tan ( 89 + 1 , cos ( 0 * 2 ) ) ) + ln ( e ) + log ( 100 ^ 2 ^ 3 )";
+        String infix = "sin ( tan ( 89 + 1 , cos ( 0 * 2 ) ) ) + ln ( e ) + log ( 100 ^ 2 ^ 3 ) + pi";
         System.out.printf("infix:   %s%n", infix);
         List<String> postFixes = parseShuntingYard(infix);
 
-        System.out.println("postfix: " + listToString(postFixes));
+        System.out.println("postfix: " + CommonUtilities.listToString(postFixes));
     }
 
     private static int getPrecendence(char operator) {
@@ -93,13 +95,5 @@ public class ShuntingYard {
 
     	Pattern functionPattern = Pattern.compile("\\D\\S*");
     	return functionPattern.matcher(token).matches();
-    }
-
-    private static String listToString(List<String> tokens) {
-    	StringBuilder b = new StringBuilder();
-    	for (String token:tokens) {
-        	b.append(token).append(" ");
-        }
-    	return b.toString();
     }
 }
