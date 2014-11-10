@@ -250,7 +250,9 @@ $(function() {
 		descriptionText = "";
 
 		try {
-			$.post('rest/evaluator/calculate', {exp: inp}, function(data) {
+			var isRadian = $('#radOpt').prop("checked");
+			console.log(isRadian);
+			$.post('rest/evaluator/calculate', {exp: inp, isRadian: isRadian}, function(data) {
 				console.log(data);
 				outputText = data;
 

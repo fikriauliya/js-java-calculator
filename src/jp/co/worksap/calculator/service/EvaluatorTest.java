@@ -6,9 +6,12 @@ import static org.junit.Assert.fail;
 import org.junit.Test;
 
 public class EvaluatorTest {
+	private String calc(String expression, boolean isRadian) {
+		return Evaluator.calculate(ShuntingYard.parse(expression), isRadian);
+	}
 
 	private String calc(String expression) {
-		return Evaluator.calculate(ShuntingYard.parse(expression));
+		return Evaluator.calculate(ShuntingYard.parse(expression), true);
 	}
 
 	@Test
@@ -165,6 +168,31 @@ public class EvaluatorTest {
 	}
 
 	@Test
+	public void testSinDegree() {
+		assertEquals(calc("sin ( 0 )", false), "0");
+		assertEquals(calc("sin ( 90 )", false), "1");
+		assertEquals(calc("sin ( 180 )", false), "0");
+		assertEquals(calc("sin ( -90 )", false), "-1");
+	}
+
+	@Test
+	public void testCosDegree() {
+		assertEquals(calc("cos ( 0 )", false), "1");
+		assertEquals(calc("cos ( 90 )", false), "0");
+		assertEquals(calc("cos ( 180 )", false), "-1");
+		assertEquals(calc("cos ( -90 )", false), "0");
+	}
+
+	@Test
+	public void testTanDegree() {
+		try { calc("tan ( -90 )", false); fail();} catch (IllegalArgumentException ex) { assertEquals(ex.getMessage(), "tan result is infinite"); }
+		assertEquals(calc("tan ( 0 )", false), "0");
+		try { calc("tan ( 90 )", false); fail(); } catch (IllegalArgumentException ex) { assertEquals(ex.getMessage(), "tan result is infinite"); }
+		assertEquals(calc("tan ( 180 )", false), "0");
+		assertEquals(calc("tan ( 45 )", false), "1");
+	}
+
+	@Test
 	public void testAsin() {
 		assertEquals(calc("asin ( 0 )"), "0");
 		assertEquals(calc("asin ( 1 )"), "1.570796326794897");
@@ -183,6 +211,28 @@ public class EvaluatorTest {
 		assertEquals(calc("atan ( 0 )"), "0");
 		assertEquals(calc("atan ( 1 )"), "0.785398163397448");
 		assertEquals(calc("atan ( -1 )"), "-0.785398163397448");
+	}
+
+
+	@Test
+	public void testAsinDegree() {
+		assertEquals(calc("asin ( 0 )", false), "0");
+		assertEquals(calc("asin ( 1 )", false), "90");
+		assertEquals(calc("asin ( -1 )", false), "-90");
+	}
+
+	@Test
+	public void testAcosDegree() {
+		assertEquals(calc("acos ( 0 )", false), "90");
+		assertEquals(calc("acos ( 1 )", false), "0");
+		assertEquals(calc("acos ( -1 )", false), "180");
+	}
+
+	@Test
+	public void testAtanDegree() {
+		assertEquals(calc("atan ( 0 )", false), "0");
+		assertEquals(calc("atan ( 1 )", false), "45");
+		assertEquals(calc("atan ( -1 )", false), "-45");
 	}
 
 	@Test

@@ -13,10 +13,11 @@ public class EvaluatorEndPoint {
 	@POST
 	@Path("calculate")
 	public String calculate(
-			@FormParam("exp") String exp
+			@FormParam("exp") String exp,
+			@FormParam("isRadian") boolean isRadian
 			) {
 		try {
-			String res = Evaluator.calculate(ShuntingYard.parse(exp));
+			String res = Evaluator.calculate(ShuntingYard.parse(exp), isRadian);
 			return res;
 		}
 		catch (IllegalArgumentException ex) {
