@@ -14,6 +14,13 @@
         <!-- Main component for a primary marketing message or call to action -->
         <div class="row">
           <div class="col-md-5">
+            <label class="radio-inline">
+              <input type="radio" name="inlineRadioOptions" id="degOpt" value="option1">Degress</input>
+            </label>
+            <label class="radio-inline">
+              <input type="radio" name="inlineRadioOptions" id="radOpt" value="option2">Radians</input>
+            </label>
+            <br/>
             <p id="descriptionText"></p>
             <table>
             <tbody>
@@ -28,7 +35,8 @@
                 <td><button id="lb" type="button" class="btn btn-success">(</button></td>
                 <td><button id="rb" type="button" class="btn btn-success">)</button></td>
                 <td><button id="backspace" type="button" class="btn btn-warning">BS</button></td>
-                <td colspan="2"><button id="clear" type="button" class="btn btn-danger">CE</button></td>
+                <td><button id="clear" type="button" class="btn btn-danger">CE</button></td>
+                <td><button id="negate" type="button" class="btn btn-default">+/-</button></td>
                 <td><button id="add" type="button" class="btn btn-info">+</button></td>
               </tr>
               <tr>

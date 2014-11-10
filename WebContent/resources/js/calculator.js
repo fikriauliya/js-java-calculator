@@ -65,6 +65,11 @@ $(function() {
 		descriptionText = "";
 		refreshOutputs();
 	});
+	$("#negate").click(function() {
+		outputText += "-";
+		descriptionText = "";
+		refreshOutputs();
+	});
 	$("#add").click(function() {
 		outputText += " + ";
 		descriptionText = "";
