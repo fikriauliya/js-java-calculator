@@ -245,6 +245,7 @@ $(function() {
 		inp = inp.replace(/\(/g, " ( ");
 		inp = inp.replace(/\)/g, " ) ");
 		inp = inp.replace(/\*/g, " * ");
+		inp = inp.replace(/,/g, " , ");
 		console.log(inp);
 		descriptionText = "";
 
