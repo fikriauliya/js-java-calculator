@@ -5,11 +5,13 @@ import java.math.BigInteger;
 import java.math.MathContext;
 import java.math.RoundingMode;
 import java.util.Stack;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import jp.co.worksap.calculator.utils.CommonUtilities;
 
 public class Evaluator {
-	private static BigDecimal E = new BigDecimal(
+	static BigDecimal E = new BigDecimal(
 			"2.71828182845904523536028747135266249775724709369995957496696762772407663035354"
 					+ "759457138217852516642742746639193200305992181741359662904357290033429526059563"
 					+ "073813232862794349076323382988075319525101901157383418793070215408914993488416"
@@ -29,7 +31,7 @@ public class Evaluator {
 					+ "251644507818244235294863637214174023889344124796357437026375529444833799801612"
 					+ "549227850925778256209262264832627793338656648162772516401910590049164499828931");
 
-	private static BigDecimal PI = new BigDecimal(
+	static BigDecimal PI = new BigDecimal(
 			"3.14159265358979323846264338327950288419716939937510582097494459230781640628620"
 					+ "899862803482534211706798214808651328230664709384460955058223172535940812848111"
 					+ "745028410270193852110555964462294895493038196442881097566593344612847564823378"
@@ -85,94 +87,141 @@ public class Evaluator {
 	}
 
 	public static String calculate(String[] postFix) {
-		Stack<BigDecimal> s = new Stack<BigDecimal>();
+		try {
+			Stack<BigDecimal> s = new Stack<BigDecimal>();
 
-		for (String token : postFix) {
-			System.out.println(token);
-			try {
-				BigDecimal number = new BigDecimal(token);
-				s.push(number);
-			} catch (NumberFormatException ex) {
-				if (token.equals("pi")) {
-					s.push(PI);
-				} else if (token.equals("e")) {
-					s.push(E);
-				} else if (token.equals("*")) {
-					BigDecimal operand2 = s.pop();
-					BigDecimal operand1 = s.pop();
-					s.push(operand1.multiply(operand2));
-				} else if (token.equals("/")) {
-					BigDecimal operand2 = s.pop();
-					BigDecimal operand1 = s.pop();
-					s.push(operand1.divide(operand2));
-				} else if (token.equals("+")) {
-					BigDecimal operand2 = s.pop();
-					BigDecimal operand1 = s.pop();
-					s.push(operand1.add(operand2));
-				} else if (token.equals("-")) {
-					BigDecimal operand2 = s.pop();
-					BigDecimal operand1 = s.pop();
-					s.push(operand1.subtract(operand2));
-				} else if (token.equals("^")) {
-					BigDecimal operand2 = s.pop();
-					BigDecimal operand1 = s.pop();
-					s.push(operand1.pow(operand2.intValue()));
-				} else if (token.equals("sin")) {
-					BigDecimal operand1 = s.pop();
-					s.push((new BigDecimal(Math.sin(operand1.doubleValue()))).setScale(15, BigDecimal.ROUND_HALF_EVEN));
-				} else if (token.equals("cos")) {
-					BigDecimal operand1 = s.pop();
-					s.push((new BigDecimal(Math.cos(operand1.doubleValue()))).setScale(15, BigDecimal.ROUND_HALF_EVEN));
-				} else if (token.equals("tan")) {
-					BigDecimal operand1 = s.pop();
-					s.push((new BigDecimal(Math.tan(operand1.doubleValue()))).setScale(15, BigDecimal.ROUND_HALF_EVEN));
-				} else if (token.equals("sinh")) {
-					BigDecimal operand1 = s.pop();
-					s.push((new BigDecimal(Math.sinh(operand1.doubleValue()))).setScale(15, BigDecimal.ROUND_HALF_EVEN));
-				} else if (token.equals("cosh")) {
-					BigDecimal operand1 = s.pop();
-					s.push((new BigDecimal(Math.cosh(operand1.doubleValue()))).setScale(15, BigDecimal.ROUND_HALF_EVEN));
-				} else if (token.equals("tanh")) {
-					BigDecimal operand1 = s.pop();
-					s.push((new BigDecimal(Math.tanh(operand1.doubleValue()))).setScale(15, BigDecimal.ROUND_HALF_EVEN));
-				} else if (token.equals("round")) {
-					BigDecimal operand1 = s.pop();
-					s.push(operand1.setScale(0, RoundingMode.HALF_UP));
-				} else if (token.equals("ceil")) {
-					BigDecimal operand1 = s.pop();
-					s.push(operand1.setScale(0, RoundingMode.CEILING));
-				} else if (token.equals("floor")) {
-					BigDecimal operand1 = s.pop();
-					s.push(operand1.setScale(0, RoundingMode.FLOOR));
-				} else if (token.equals("mod")) {
-					BigDecimal operand2 = s.pop();
-					BigDecimal operand1 = s.pop();
-					s.push(operand1.remainder(operand2));
-				} else if (token.equals("fact")) {
-					BigDecimal operand1 = s.pop();
-					s.push(new BigDecimal(factorial(operand1
-							.toBigIntegerExact())));
-				} else if (token.equals("sqrt")) {
-					BigDecimal operand1 = s.pop();
-					s.push(rootNewtonRaphson(operand1, 2, new BigDecimal(1),
-							new BigDecimal(1).divide(SQRT_PRE)));
-				} else if (token.equals("root")) {
-					BigDecimal operand2 = s.pop();
-					BigDecimal operand1 = s.pop();
-					s.push(rootNewtonRaphson(operand1, operand2.intValue(),
-							new BigDecimal(1),
-							new BigDecimal(1).divide(SQRT_PRE)));
-				} else if (token.equals("log")) {
-					BigDecimal operand1 = s.pop();
-					s.push(new BigDecimal(Math.log10(operand1.doubleValue())));
-				} else if (token.equals("ln")) {
-					BigDecimal operand1 = s.pop();
-					s.push(new BigDecimal(Math.log(operand1.doubleValue())));
+			for (String token : postFix) {
+				System.out.println(token);
+				try {
+					BigDecimal number = new BigDecimal(token);
+					s.push(number);
+				} catch (NumberFormatException ex) {
+					if (token.equals("pi")) {
+						s.push(PI);
+					} else if (token.equals("e")) {
+						s.push(E);
+					} else if (token.equals("*")) {
+						BigDecimal operand2 = s.pop();
+						BigDecimal operand1 = s.pop();
+						s.push(operand1.multiply(operand2));
+					} else if (token.equals("/")) {
+						BigDecimal operand2 = s.pop();
+						BigDecimal operand1 = s.pop();
+						s.push(operand1.divide(operand2));
+					} else if (token.equals("+")) {
+						BigDecimal operand2 = s.pop();
+						BigDecimal operand1 = s.pop();
+						s.push(operand1.add(operand2));
+					} else if (token.equals("-")) {
+						BigDecimal operand2 = s.pop();
+						BigDecimal operand1 = s.pop();
+						s.push(operand1.subtract(operand2));
+					} else if (token.equals("^")) {
+						BigDecimal operand2 = s.pop();
+						BigDecimal operand1 = s.pop();
+						Double res = Math.pow(operand1.doubleValue(), operand2.doubleValue());
+						if (res.isNaN()) {
+							throw new IllegalArgumentException("Invalid exponent");
+						} else if (res.isInfinite()) {
+							throw new IllegalArgumentException("Exponent is too big");
+						}
+						s.push(new BigDecimal(res));
+					} else if (token.equals("sin")) {
+						BigDecimal operand1 = s.pop();
+						s.push((new BigDecimal(Math.sin(operand1.doubleValue()))).setScale(15, BigDecimal.ROUND_HALF_EVEN));
+					} else if (token.equals("cos")) {
+						BigDecimal operand1 = s.pop();
+						s.push((new BigDecimal(Math.cos(operand1.doubleValue()))).setScale(15, BigDecimal.ROUND_HALF_EVEN));
+					} else if (token.equals("tan")) {
+						BigDecimal operand1 = s.pop();
+						s.push((new BigDecimal(Math.tan(operand1.doubleValue()))).setScale(15, BigDecimal.ROUND_HALF_EVEN));
+					} else if (token.equals("sinh")) {
+						BigDecimal operand1 = s.pop();
+						s.push((new BigDecimal(Math.sinh(operand1.doubleValue()))).setScale(15, BigDecimal.ROUND_HALF_EVEN));
+					} else if (token.equals("cosh")) {
+						BigDecimal operand1 = s.pop();
+						s.push((new BigDecimal(Math.cosh(operand1.doubleValue()))).setScale(15, BigDecimal.ROUND_HALF_EVEN));
+					} else if (token.equals("tanh")) {
+						BigDecimal operand1 = s.pop();
+						s.push((new BigDecimal(Math.tanh(operand1.doubleValue()))).setScale(15, BigDecimal.ROUND_HALF_EVEN));
+					} else if (token.equals("round")) {
+						BigDecimal operand1 = s.pop();
+						s.push(operand1.setScale(0, RoundingMode.HALF_UP));
+					} else if (token.equals("ceil")) {
+						BigDecimal operand1 = s.pop();
+						s.push(operand1.setScale(0, RoundingMode.CEILING));
+					} else if (token.equals("floor")) {
+						BigDecimal operand1 = s.pop();
+						s.push(operand1.setScale(0, RoundingMode.FLOOR));
+					} else if (token.equals("mod")) {
+						BigDecimal operand2 = s.pop();
+						BigDecimal operand1 = s.pop();
+						s.push(operand1.remainder(operand2));
+					} else if (token.equals("fact")) {
+						BigDecimal operand1 = s.pop();
+						s.push(new BigDecimal(factorial(operand1
+								.toBigIntegerExact())));
+					} else if (token.equals("sqrt")) {
+						BigDecimal operand1 = s.pop();
+						s.push(rootNewtonRaphson(operand1, 2, new BigDecimal(1),
+								new BigDecimal(1).divide(SQRT_PRE)));
+					} else if (token.equals("root")) {
+						BigDecimal operand2 = s.pop();
+						BigDecimal operand1 = s.pop();
+						s.push(rootNewtonRaphson(operand1, operand2.intValue(),
+								new BigDecimal(1),
+								new BigDecimal(1).divide(SQRT_PRE)));
+					} else if (token.equals("log")) {
+						BigDecimal operand1 = s.pop();
+						Double res = Math.log10(operand1.doubleValue());
+						if (res.isNaN()) {
+							throw new IllegalArgumentException("log argument can't be less than 0");
+						} else if (res == Double.NEGATIVE_INFINITY) {
+							throw new IllegalArgumentException("log argument can't be 0");
+						}
+						s.push(new BigDecimal(res));
+					} else if (token.equals("ln")) {
+						BigDecimal operand1 = s.pop();
+						Double res = Math.log(operand1.doubleValue());
+						if (res.isNaN()) {
+							throw new IllegalArgumentException("ln argument can't be less than 0");
+						} else if (res == Double.NEGATIVE_INFINITY) {
+							throw new IllegalArgumentException("ln argument can't be 0");
+						}
+						s.push(new BigDecimal(res));
+					}
 				}
+				System.out.println(CommonUtilities.listToString(s));
 			}
-			System.out.println(CommonUtilities.listToString(s));
+			String res = s.pop().stripTrailingZeros().toPlainString();
+
+			System.out.println("== " + res);
+			Pattern p1 = Pattern.compile("(^\\d+(?:\\.)\\d+?)0+$");
+			Matcher m1 = p1.matcher(res);
+			if (m1.matches()) {
+				Pattern p2 = Pattern.compile("(^\\d+)\\.0+$");
+				Matcher m2 = p2.matcher(res);
+				if (m2.matches()) {
+					return m2.group(1);
+				} else {
+					return m1.group(1);
+				}
+			} else {
+				return res;
+			}
+
+		} catch (ArithmeticException ex) {
+			if (ex.getMessage().equals("Division by zero")) {
+				throw new IllegalArgumentException("Cannot divide by zero");
+			} else if (ex.getMessage().equals("Division undefined")) {
+				throw new IllegalArgumentException("Result is undefined");
+			} else {
+				throw new IllegalArgumentException("Invalid");
+			}
+		} catch (NumberFormatException ex) {
+			System.out.println(ex.getMessage());
+			throw new IllegalArgumentException("Invalid");
 		}
-		return s.pop().toString();
 	}
 
 	public static void main(String[] args) {
