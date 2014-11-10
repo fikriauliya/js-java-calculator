@@ -13,7 +13,9 @@
       <ui:define name="content">
         <!-- Main component for a primary marketing message or call to action -->
         <div class="row">
-          <div class="col-md-5">
+          <div class="col-md-12">
+            <input id="outputText" type="text" style="width: 100%;" readonly="readonly"></input>
+            <br/><br/>
             <label class="radio-inline">
               <input type="radio" name="inlineRadioOptions" id="degOpt" value="option1">Degress</input>
             </label>
@@ -24,11 +26,6 @@
             <p id="descriptionText"></p>
             <table>
             <tbody>
-              <tr>
-                <td colspan="8">
-                  <input id="outputText" type="text" style="width: 100%;" readonly="readonly"></input>
-                </td>
-              </tr>
               <tr>
                 <td><button id="asin" type="button" class="btn btn-success">asin</button></td>
                 <td><button id="sin" type="button" class="btn btn-success">sin</button></td>
