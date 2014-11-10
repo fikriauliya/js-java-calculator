@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 import jp.co.worksap.calculator.utils.CommonUtilities;
 
 public class ShuntingYard {
-	public static List<String> parseShuntingYard(String infix) {
+	public static String[] parse(String infix) {
     	List<String> res = new LinkedList<String>();
     	Stack<String> operatorsStack = new Stack<String>();
 
@@ -36,17 +36,34 @@ public class ShuntingYard {
     			operatorsStack.push(token);
     		} else if (token.equals(")")) {
     			System.out.print("Bracket:" + token);
+
+				if (operatorsStack.isEmpty()) {
+					throw new IllegalArgumentException("Mismatched parenthesis");
+				}
+
     			while (!operatorsStack.peek().equals("(")) {
     				res.add(operatorsStack.pop());
+    				if (operatorsStack.isEmpty()) {
+    					throw new IllegalArgumentException("Mismatched parenthesis");
+					}
     			}
+
     			operatorsStack.pop();
     			if (!operatorsStack.isEmpty() && isFunction(operatorsStack.peek())) {
     				res.add(operatorsStack.pop());
     			}
 			} else if (token.equals(",")) {
 				System.out.print("Separator: " + token);
+
+				if (operatorsStack.isEmpty()) {
+					throw new IllegalArgumentException("Mismatched parenthesis");
+				}
+
 				while (!operatorsStack.peek().equals("(")) {
 					res.add(operatorsStack.pop());
+					if (operatorsStack.isEmpty()) {
+						throw new IllegalArgumentException("Mismatched parenthesis");
+					}
 				}
 			} else if (isFunction(token)) {
 				System.out.print("Function: " + token);
@@ -61,18 +78,22 @@ public class ShuntingYard {
     	}
 
     	while (!operatorsStack.isEmpty()) {
-    		// Check parenthesis
+    		if (operatorsStack.peek().equals("(") || operatorsStack.peek().equals(")"))
+    			throw new IllegalArgumentException("Mismatched parenthesis");
     		res.add(operatorsStack.pop());
     	}
-    	return res;
+
+    	System.out.println("= " + CommonUtilities.listToString(res));
+    	return res.toArray(new String[0]);
     }
 
     public static void main(String[] args) {
-        String infix = "sin ( tan ( 89 + 1 , cos ( 0 * 2 ) ) ) + ln ( e ) + log ( 100 ^ 2 ^ 3 ) + pi";
+//        String infix = "sin ( tan ( 89 + 1 , cos ( 0 * 2 ) ) ) + ln ( e ) + log ( 100 ^ 2 ^ 3 ) + pi";
+    	String infix = "1 2 +";
         System.out.printf("infix:   %s%n", infix);
-        List<String> postFixes = parseShuntingYard(infix);
+        String[] postFixes = parse(infix);
 
-        System.out.println("postfix: " + CommonUtilities.listToString(postFixes));
+        System.out.println("postfix: " + CommonUtilities.arrayToString(postFixes));
     }
 
     private static int getPrecendence(char operator) {

@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.MathContext;
 import java.math.RoundingMode;
-import java.util.List;
 import java.util.Stack;
 
 import jp.co.worksap.calculator.utils.CommonUtilities;
@@ -85,7 +84,7 @@ public class Evaluator {
 		return rootNewtonRaphson(a, n, xn1, precision);
 	}
 
-	public static String calculate(List<String> postFix) {
+	public static String calculate(String[] postFix) {
 		Stack<BigDecimal> s = new Stack<BigDecimal>();
 
 		for (String token : postFix) {
@@ -177,10 +176,10 @@ public class Evaluator {
 	}
 
 	public static void main(String[] args) {
-		String exp = "round (  pi )";
+		String exp = "0.1 0.2 +";
 		try {
-			List<String> postFix = ShuntingYard.parseShuntingYard(exp);
-			System.out.println(CommonUtilities.listToString(postFix));
+			String[] postFix = ShuntingYard.parse(exp);
+			System.out.println(CommonUtilities.arrayToString(postFix));
 			String res = calculate(postFix);
 			System.out.println(res);
 		} catch (Exception ex) {

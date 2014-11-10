@@ -11,4 +11,12 @@ public class CommonUtilities {
         }
     	return b.toString();
     }
+
+    public static <T extends Object> String arrayToString(T[] tokens) {
+    	StringBuilder b = new StringBuilder();
+    	for (Object token:tokens) {
+        	b.append(token.toString()).append(" ");
+        }
+    	return b.toString();
+    }
 }
