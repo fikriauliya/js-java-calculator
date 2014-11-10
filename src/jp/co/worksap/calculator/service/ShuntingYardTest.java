@@ -22,6 +22,8 @@ public class ShuntingYardTest {
 		assertArrayEquals(ShuntingYard.parse("-1 + -2"), new String[] {"-1", "-2", "+"});
 		assertArrayEquals(ShuntingYard.parse("-1 + --2"), new String[] {"-1", "--2", "+"});
 		assertArrayEquals(ShuntingYard.parse("-1 + +2"), new String[] {"-1", "+2", "+"});
+		assertArrayEquals(ShuntingYard.parse("1 + -pi"), new String[] {"1", "-pi", "+"});
+		assertArrayEquals(ShuntingYard.parse("1 + --pi"), new String[] {"1", "--pi", "+"});
 	}
 
 	@Test

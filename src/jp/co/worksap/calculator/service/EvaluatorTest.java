@@ -13,6 +13,8 @@ public class EvaluatorTest {
 
 	@Test
 	public void testPlus() {
+		assertEquals(calc("pi + -pi"), "0");
+		assertEquals(calc("e + -e"), "0");
 		assertEquals(calc("1 + 1"), "2");
 		assertEquals(calc("0.1 + 0.2"), "0.3");
 		assertEquals(calc("0.1 + -0.2"), "-0.1");
@@ -131,7 +133,87 @@ public class EvaluatorTest {
 		assertEquals(calc("mod ( -2 , 3 )"), "-2");
 		assertEquals(calc("mod ( -4 , 3 )"), "-1");
 		assertEquals(calc("mod ( -4 , -3 )"), "-1");
-		assertEquals(calc("mod ( -4 , 0 )"), "-1");
+		try { calc("mod ( -4 , 0 )"); fail(); } catch (IllegalArgumentException ex) { assertEquals(ex.getMessage(), "Cannot divide by zero"); }
 	}
+
+	@Test
+	public void testSin() {
+		assertEquals(calc("sin ( ( -1 / 2 ) * pi )"), "-1");
+		assertEquals(calc("sin ( 0 )"), "0");
+		assertEquals(calc("sin ( 0.5 * pi )"), "1");
+		assertEquals(calc("sin ( 2 * pi )"), "0");
+	}
+
+	@Test
+	public void testCos() {
+		assertEquals(calc("cos ( ( -1 / 2 ) * pi )"), "0");
+		assertEquals(calc("cos ( 0 )"), "1");
+		assertEquals(calc("cos ( 0.5 * pi )"), "0");
+		assertEquals(calc("cos ( 2 * pi )"), "1");
+	}
+
+	@Test
+	public void testTan() {
+		try { calc("tan ( ( -1 / 2 ) * pi )"); fail();} catch (IllegalArgumentException ex) { assertEquals(ex.getMessage(), "Cannot divide by zero"); }
+		assertEquals(calc("tan ( 0 )"), "0");
+		try { calc("tan ( 0.5 * pi )"); fail(); } catch (IllegalArgumentException ex) { assertEquals(ex.getMessage(), "Cannot divide by zero"); }
+		assertEquals(calc("tan ( 2 * pi )"), "0");
+		assertEquals(calc("tan ( pi / 4 )"), "1");
+	}
+
+	@Test
+	public void testAsin() {
+		assertEquals(calc("asin ( 0 )"), "0");
+		assertEquals(calc("asin ( 1 )"), "1.570796326794897");
+		assertEquals(calc("asin ( -1 )"), "-1.570796326794897");
+	}
+
+	@Test
+	public void testAcos() {
+		assertEquals(calc("acos ( 0 )"), "1.570796326794897");
+		assertEquals(calc("acos ( 1 )"), "0");
+		assertEquals(calc("acos ( -1 )"), "3.141592653589793");
+	}
+
+	@Test
+	public void testAtan() {
+		assertEquals(calc("atan ( 0 )"), "0");
+		assertEquals(calc("atan ( 1 )"), "0.785398163397448");
+		assertEquals(calc("atan ( -1 )"), "-0.785398163397448");
+	}
+
+	@Test
+	public void testSquareRoot() {
+		assertEquals(calc("sqrt ( 0 )"), "0");
+		assertEquals(calc("sqrt ( 4 )"), "2");
+		assertEquals(calc("sqrt ( 0.04 )"), "0.2");
+		assertEquals(calc("sqrt ( 16 )"), "4");
+		assertEquals(calc("sqrt ( 225 )"), "15");
+		try {calc("sqrt ( -1 )"); fail();} catch (IllegalArgumentException ex) { assertEquals(ex.getMessage(), "Root of negative is undefined"); }
+		try {calc("sqrt ( -0.0000000000000000000000000000000000000000000000000000000000000000000001 )"); fail();} catch (IllegalArgumentException ex) { assertEquals(ex.getMessage(), "Root of negative is undefined"); }
+	}
+
+	@Test
+	public void testRoot() {
+		assertEquals(calc("root ( 1 , 100 )"), "1");
+		assertEquals(calc("root ( 4 , 2 )"), "2");
+		assertEquals(calc("root ( 16 , 3 )"), "2.519842099789746");
+		assertEquals(calc("root ( 225 , 3 )"), "6.082201995573399");
+		try {calc("root ( -1 , 4 )"); fail();} catch (IllegalArgumentException ex) { assertEquals(ex.getMessage(), "Root of negative is undefined"); }
+		try {calc("root ( -0.0000000000000000000000000000000000000000000000000000000000000000000001 , 54 )"); fail();} catch (IllegalArgumentException ex) { assertEquals(ex.getMessage(), "Root of negative is undefined"); }
+		assertEquals(calc("root ( 4 , -2 )"), "0.5");
+		try {calc("root ( 2 , 0 )"); fail();} catch (IllegalArgumentException ex) { assertEquals(ex.getMessage(), "Root with base 0 is undefined"); }
+	}
+
+	@Test
+	public void testFact() {
+		assertEquals(calc("fact ( 0 )"), "1");
+		assertEquals(calc("fact ( 1 )"), "1");
+		assertEquals(calc("fact ( 2 )"), "2");
+		assertEquals(calc("fact ( 3 )"), "6");
+		assertEquals(calc("fact ( 4 )"), "24");
+//		assertEquals(calc("fact ( -1 )"), "-1");
+	}
+
 }
 

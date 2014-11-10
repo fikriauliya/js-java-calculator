@@ -2,7 +2,6 @@ package jp.co.worksap.calculator.service;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.math.MathContext;
 import java.math.RoundingMode;
 import java.util.Stack;
 import java.util.regex.Matcher;
@@ -66,25 +65,34 @@ public class Evaluator {
 		return f;
 	}
 
-	private static final BigDecimal SQRT_DIG = new BigDecimal(100);
+	private static final BigDecimal SQRT_DIG = new BigDecimal(50);
 	private static final BigDecimal SQRT_PRE = new BigDecimal(10).pow(SQRT_DIG
 			.intValue());
 
-	private static BigDecimal rootNewtonRaphson(BigDecimal a, int n,
-			BigDecimal xn, BigDecimal precision) {
-		BigDecimal fx = xn.pow(n).add(a.negate());
-		BigDecimal fpx = xn.pow(n - 1).multiply(new BigDecimal(n));
-		BigDecimal xn1 = fx.divide(fpx, 2 * SQRT_DIG.intValue(),
-				RoundingMode.HALF_DOWN);
-		xn1 = xn.add(xn1.negate());
-		BigDecimal currentRes = xn1.pow(n);
-		BigDecimal currentPrecision = currentRes.subtract(a);
-		currentPrecision = currentPrecision.abs();
-		if (currentPrecision.compareTo(precision) <= -1) {
-			return xn1.round(new MathContext(100));
-		}
-		return rootNewtonRaphson(a, n, xn1, precision);
-	}
+//	private static BigDecimal rootNewtonRaphson(BigDecimal a, int n,
+//			BigDecimal xn, BigDecimal precision) {
+//		if (a.compareTo(BigDecimal.ZERO) == 0) return BigDecimal.ZERO;
+//
+//		int MAX_LOOP = 500;
+//		int i = 0;
+//		while (i++ < MAX_LOOP) {
+//			BigDecimal fx = xn.pow(n).add(a.negate());
+//			BigDecimal fpx = xn.pow(n - 1).multiply(new BigDecimal(n));
+//			BigDecimal xn1 = fx.divide(fpx, 2 * SQRT_DIG.intValue(),
+//					RoundingMode.HALF_DOWN);
+//			xn1 = xn.add(xn1.negate());
+//			BigDecimal currentRes = xn1.pow(n);
+//			BigDecimal currentPrecision = currentRes.subtract(a);
+//			currentPrecision = currentPrecision.abs();
+//			if (currentPrecision.compareTo(precision) <= -1) {
+//				return xn1.round(new MathContext(100));
+//			}
+//
+//			xn = xn1;
+//		}
+//
+//		return xn;
+//	}
 
 	public static String calculate(String[] postFix) {
 		try {
@@ -98,8 +106,12 @@ public class Evaluator {
 				} catch (NumberFormatException ex) {
 					if (token.equals("pi")) {
 						s.push(PI);
+					} else if (token.equals("-pi")) {
+						s.push(PI.negate());
 					} else if (token.equals("e")) {
 						s.push(E);
+					} else if (token.equals("-e")) {
+						s.push(E.negate());
 					} else if (token.equals("*")) {
 						BigDecimal operand2 = s.pop();
 						BigDecimal operand1 = s.pop();
@@ -128,22 +140,25 @@ public class Evaluator {
 						s.push(new BigDecimal(res));
 					} else if (token.equals("sin")) {
 						BigDecimal operand1 = s.pop();
-						s.push((new BigDecimal(Math.sin(operand1.doubleValue()))).setScale(15, BigDecimal.ROUND_HALF_EVEN));
+						s.push((new BigDecimal(Math.sin(operand1.doubleValue()))).setScale(14, BigDecimal.ROUND_HALF_UP));
 					} else if (token.equals("cos")) {
 						BigDecimal operand1 = s.pop();
-						s.push((new BigDecimal(Math.cos(operand1.doubleValue()))).setScale(15, BigDecimal.ROUND_HALF_EVEN));
+						s.push((new BigDecimal(Math.cos(operand1.doubleValue()))).setScale(14, BigDecimal.ROUND_HALF_UP));
 					} else if (token.equals("tan")) {
 						BigDecimal operand1 = s.pop();
-						s.push((new BigDecimal(Math.tan(operand1.doubleValue()))).setScale(15, BigDecimal.ROUND_HALF_EVEN));
-					} else if (token.equals("sinh")) {
+						BigDecimal opSin = new BigDecimal(Math.sin(operand1.doubleValue())).setScale(15, BigDecimal.ROUND_HALF_UP);
+						BigDecimal opCos = new BigDecimal(Math.cos(operand1.doubleValue())).setScale(15, BigDecimal.ROUND_HALF_UP);
+
+						s.push(opSin.divide(opCos, 14, RoundingMode.HALF_DOWN));
+					} else if (token.equals("asin")) {
 						BigDecimal operand1 = s.pop();
-						s.push((new BigDecimal(Math.sinh(operand1.doubleValue()))).setScale(15, BigDecimal.ROUND_HALF_EVEN));
-					} else if (token.equals("cosh")) {
+						s.push((new BigDecimal(Math.asin(operand1.doubleValue()))).setScale(15, BigDecimal.ROUND_HALF_UP));
+					} else if (token.equals("acos")) {
 						BigDecimal operand1 = s.pop();
-						s.push((new BigDecimal(Math.cosh(operand1.doubleValue()))).setScale(15, BigDecimal.ROUND_HALF_EVEN));
-					} else if (token.equals("tanh")) {
+						s.push((new BigDecimal(Math.acos(operand1.doubleValue()))).setScale(15, BigDecimal.ROUND_HALF_UP));
+					} else if (token.equals("atan")) {
 						BigDecimal operand1 = s.pop();
-						s.push((new BigDecimal(Math.tanh(operand1.doubleValue()))).setScale(15, BigDecimal.ROUND_HALF_EVEN));
+						s.push((new BigDecimal(Math.atan(operand1.doubleValue()))).setScale(15, BigDecimal.ROUND_HALF_UP));
 					} else if (token.equals("round")) {
 						BigDecimal operand1 = s.pop();
 						s.push(operand1.setScale(0, RoundingMode.HALF_UP));
@@ -163,14 +178,23 @@ public class Evaluator {
 								.toBigIntegerExact())));
 					} else if (token.equals("sqrt")) {
 						BigDecimal operand1 = s.pop();
-						s.push(rootNewtonRaphson(operand1, 2, new BigDecimal(1),
-								new BigDecimal(1).divide(SQRT_PRE)));
+						if (operand1.compareTo(BigDecimal.ZERO) == -1) {
+							throw new IllegalArgumentException("Root of negative is undefined");
+						}
+						s.push(new BigDecimal(Math.pow(operand1.doubleValue(), 0.5)).setScale(15, BigDecimal.ROUND_HALF_UP));
 					} else if (token.equals("root")) {
 						BigDecimal operand2 = s.pop();
 						BigDecimal operand1 = s.pop();
-						s.push(rootNewtonRaphson(operand1, operand2.intValue(),
-								new BigDecimal(1),
-								new BigDecimal(1).divide(SQRT_PRE)));
+
+						if (operand1.compareTo(BigDecimal.ZERO) == -1) {
+							throw new IllegalArgumentException("Root of negative is undefined");
+						}
+
+						if (operand2.compareTo(BigDecimal.ZERO) == 0) {
+							throw new IllegalArgumentException("Root with base 0 is undefined");
+						} else {
+							s.push(new BigDecimal(Math.pow(operand1.doubleValue(), 1/operand2.doubleValue())).setScale(15, BigDecimal.ROUND_HALF_UP));
+						}
 					} else if (token.equals("log")) {
 						BigDecimal operand1 = s.pop();
 						Double res = Math.log10(operand1.doubleValue());
@@ -211,11 +235,12 @@ public class Evaluator {
 			}
 
 		} catch (ArithmeticException ex) {
-			if (ex.getMessage().equals("Division by zero")) {
+			if (ex.getMessage().equals("Division by zero") || ex.getMessage().equals("BigInteger divide by zero")) {
 				throw new IllegalArgumentException("Cannot divide by zero");
 			} else if (ex.getMessage().equals("Division undefined")) {
 				throw new IllegalArgumentException("Result is undefined");
 			} else {
+				System.out.println(ex.getMessage());
 				throw new IllegalArgumentException("Invalid");
 			}
 		} catch (NumberFormatException ex) {
