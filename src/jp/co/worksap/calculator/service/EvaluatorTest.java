@@ -58,7 +58,10 @@ public class EvaluatorTest {
 		assertEquals(calc("2 ^ 0"), "1");
 		assertEquals(calc("2 ^ -1"), "0.5");
 		assertEquals(calc("2 ^ 10"), "1024");
+		assertEquals(calc("2 ^ 1000"), "10715086071862673209484250490600018105614048117055336074437503883703510511249361224931983788156958581275946729175531468251871452856923140435984577574698574803934567774824230985421074605062371141877954182153046474983581941267398767559165543946077062914571196477686542167660429831652624386837205668069376");
 		assertEquals(calc("2 ^ -10"), "0.0009765625");
+		assertEquals(calc("10 ^ 75"), "1000000000000000000000000000000000000000000000000000000000000000000000000000");
+		assertEquals(calc("10 ^ 70"), "10000000000000000000000000000000000000000000000000000000000000000000000");
 		try { calc("2 ^ 1000000"); fail();} catch (IllegalArgumentException ex){ assertEquals(ex.getMessage(), "Exponent is too big");}
 	}
 
@@ -154,9 +157,9 @@ public class EvaluatorTest {
 
 	@Test
 	public void testTan() {
-		try { calc("tan ( ( -1 / 2 ) * pi )"); fail();} catch (IllegalArgumentException ex) { assertEquals(ex.getMessage(), "Cannot divide by zero"); }
+		try { calc("tan ( ( -1 / 2 ) * pi )"); fail();} catch (IllegalArgumentException ex) { assertEquals(ex.getMessage(), "tan result is infinite"); }
 		assertEquals(calc("tan ( 0 )"), "0");
-		try { calc("tan ( 0.5 * pi )"); fail(); } catch (IllegalArgumentException ex) { assertEquals(ex.getMessage(), "Cannot divide by zero"); }
+		try { calc("tan ( 0.5 * pi )"); fail(); } catch (IllegalArgumentException ex) { assertEquals(ex.getMessage(), "tan result is infinite"); }
 		assertEquals(calc("tan ( 2 * pi )"), "0");
 		assertEquals(calc("tan ( pi / 4 )"), "1");
 	}

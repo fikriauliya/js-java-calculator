@@ -123,7 +123,7 @@ public class Evaluator {
 						if (operand2.compareTo(BigDecimal.ZERO) == 0 && operand1.compareTo(BigDecimal.ZERO) == 0) {
 							throw new IllegalArgumentException("Result is undefined");
 						}
-						s.push(operand1.divide(operand2, 100, RoundingMode.HALF_DOWN));
+						s.push(operand1.divide(operand2, 20, RoundingMode.HALF_DOWN));
 					} else if (token.equals("+")) {
 						BigDecimal operand2 = s.pop();
 						BigDecimal operand1 = s.pop();
@@ -135,34 +135,48 @@ public class Evaluator {
 					} else if (token.equals("^")) {
 						BigDecimal operand2 = s.pop();
 						BigDecimal operand1 = s.pop();
-						Double res = Math.pow(operand1.doubleValue(), operand2.doubleValue());
-						if (res.isNaN()) {
-							throw new IllegalArgumentException("Invalid exponent");
-						} else if (res.isInfinite()) {
-							throw new IllegalArgumentException("Exponent is too big");
+
+						boolean isCalculated = false;
+						if (operand2.remainder(BigDecimal.ONE).compareTo(BigDecimal.ZERO) == 0) {
+							if (operand2.compareTo(new BigDecimal(1001)) == -1 && operand2.compareTo(BigDecimal.ONE) == 1) {
+								s.push(operand1.pow(operand2.intValue()));
+								isCalculated = true;
+							}
 						}
-						s.push(new BigDecimal(res));
+
+						if (!isCalculated) {
+							Double res = Math.pow(operand1.doubleValue(), operand2.doubleValue());
+							if (res.isNaN()) {
+								throw new IllegalArgumentException("Invalid exponent");
+							} else if (res.isInfinite()) {
+								throw new IllegalArgumentException("Exponent is too big");
+							}
+							s.push(new BigDecimal(res.toString()));
+						}
 					} else if (token.equals("sin")) {
 						BigDecimal operand1 = s.pop();
-						s.push((new BigDecimal(Math.sin(operand1.doubleValue()))).setScale(14, BigDecimal.ROUND_HALF_UP));
+						s.push((new BigDecimal(Double.toString(Math.sin(operand1.doubleValue())))).setScale(14, BigDecimal.ROUND_HALF_UP));
 					} else if (token.equals("cos")) {
 						BigDecimal operand1 = s.pop();
-						s.push((new BigDecimal(Math.cos(operand1.doubleValue()))).setScale(14, BigDecimal.ROUND_HALF_UP));
+						s.push((new BigDecimal(Double.toString(Math.cos(operand1.doubleValue())))).setScale(14, BigDecimal.ROUND_HALF_UP));
 					} else if (token.equals("tan")) {
 						BigDecimal operand1 = s.pop();
-						BigDecimal opSin = new BigDecimal(Math.sin(operand1.doubleValue())).setScale(15, BigDecimal.ROUND_HALF_UP);
-						BigDecimal opCos = new BigDecimal(Math.cos(operand1.doubleValue())).setScale(15, BigDecimal.ROUND_HALF_UP);
+						BigDecimal opSin = new BigDecimal(Double.toString(Math.sin(operand1.doubleValue()))).setScale(15, BigDecimal.ROUND_HALF_UP);
+						BigDecimal opCos = new BigDecimal(Double.toString(Math.cos(operand1.doubleValue()))).setScale(15, BigDecimal.ROUND_HALF_UP);
 
+						if (opCos.compareTo(BigDecimal.ZERO) == 0) {
+							throw new IllegalArgumentException("tan result is infinite");
+						}
 						s.push(opSin.divide(opCos, 14, RoundingMode.HALF_DOWN));
 					} else if (token.equals("asin")) {
 						BigDecimal operand1 = s.pop();
-						s.push((new BigDecimal(Math.asin(operand1.doubleValue()))).setScale(15, BigDecimal.ROUND_HALF_UP));
+						s.push((new BigDecimal(Double.toString(Math.asin(operand1.doubleValue())))).setScale(15, BigDecimal.ROUND_HALF_UP));
 					} else if (token.equals("acos")) {
 						BigDecimal operand1 = s.pop();
-						s.push((new BigDecimal(Math.acos(operand1.doubleValue()))).setScale(15, BigDecimal.ROUND_HALF_UP));
+						s.push((new BigDecimal(Double.toString(Math.acos(operand1.doubleValue())))).setScale(15, BigDecimal.ROUND_HALF_UP));
 					} else if (token.equals("atan")) {
 						BigDecimal operand1 = s.pop();
-						s.push((new BigDecimal(Math.atan(operand1.doubleValue()))).setScale(15, BigDecimal.ROUND_HALF_UP));
+						s.push((new BigDecimal(Double.toString(Math.atan(operand1.doubleValue())))).setScale(15, BigDecimal.ROUND_HALF_UP));
 					} else if (token.equals("round")) {
 						BigDecimal operand1 = s.pop();
 						s.push(operand1.setScale(0, RoundingMode.HALF_UP));
@@ -185,7 +199,7 @@ public class Evaluator {
 						if (operand1.compareTo(BigDecimal.ZERO) == -1) {
 							throw new IllegalArgumentException("Root of negative is undefined");
 						}
-						s.push(new BigDecimal(Math.pow(operand1.doubleValue(), 0.5)).setScale(15, BigDecimal.ROUND_HALF_UP));
+						s.push(new BigDecimal(Double.toString(Math.pow(operand1.doubleValue(), 0.5))).setScale(15, BigDecimal.ROUND_HALF_UP));
 					} else if (token.equals("root")) {
 						BigDecimal operand2 = s.pop();
 						BigDecimal operand1 = s.pop();
@@ -197,7 +211,7 @@ public class Evaluator {
 						if (operand2.compareTo(BigDecimal.ZERO) == 0) {
 							throw new IllegalArgumentException("Root with base 0 is undefined");
 						} else {
-							s.push(new BigDecimal(Math.pow(operand1.doubleValue(), 1/operand2.doubleValue())).setScale(15, BigDecimal.ROUND_HALF_UP));
+							s.push(new BigDecimal(Double.toString(Math.pow(operand1.doubleValue(), 1/operand2.doubleValue()))).setScale(15, BigDecimal.ROUND_HALF_UP));
 						}
 					} else if (token.equals("log")) {
 						BigDecimal operand1 = s.pop();
@@ -207,7 +221,7 @@ public class Evaluator {
 						} else if (res == Double.NEGATIVE_INFINITY) {
 							throw new IllegalArgumentException("log argument can't be 0");
 						}
-						s.push(new BigDecimal(res));
+						s.push(new BigDecimal(Double.toString(res)));
 					} else if (token.equals("ln")) {
 						BigDecimal operand1 = s.pop();
 						Double res = Math.log(operand1.doubleValue());
@@ -216,7 +230,7 @@ public class Evaluator {
 						} else if (res == Double.NEGATIVE_INFINITY) {
 							throw new IllegalArgumentException("ln argument can't be 0");
 						}
-						s.push(new BigDecimal(res));
+						s.push(new BigDecimal(Double.toString(res)));
 					}
 				}
 				System.out.println(CommonUtilities.listToString(s));
@@ -224,7 +238,7 @@ public class Evaluator {
 			String res = s.pop().stripTrailingZeros().toPlainString();
 
 			System.out.println("== " + res);
-			Pattern p1 = Pattern.compile("(^\\d+(?:\\.)\\d+?)0+$");
+			Pattern p1 = Pattern.compile("(^\\d+\\.\\d*?)0+$");
 			Matcher m1 = p1.matcher(res);
 			if (m1.matches()) {
 				Pattern p2 = Pattern.compile("(^\\d+)\\.0+$");
