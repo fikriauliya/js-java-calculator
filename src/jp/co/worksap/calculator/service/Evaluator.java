@@ -119,7 +119,11 @@ public class Evaluator {
 					} else if (token.equals("/")) {
 						BigDecimal operand2 = s.pop();
 						BigDecimal operand1 = s.pop();
-						s.push(operand1.divide(operand2));
+
+						if (operand2.compareTo(BigDecimal.ZERO) == 0 && operand1.compareTo(BigDecimal.ZERO) == 0) {
+							throw new IllegalArgumentException("Result is undefined");
+						}
+						s.push(operand1.divide(operand2, 100, RoundingMode.HALF_DOWN));
 					} else if (token.equals("+")) {
 						BigDecimal operand2 = s.pop();
 						BigDecimal operand1 = s.pop();
