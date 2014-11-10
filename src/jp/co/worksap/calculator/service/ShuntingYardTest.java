@@ -17,6 +17,14 @@ public class ShuntingYardTest {
 	}
 
 	@Test
+	public void testMinus() {
+		assertArrayEquals(ShuntingYard.parse("-1 + 2"), new String[] {"-1", "2", "+"});
+		assertArrayEquals(ShuntingYard.parse("-1 + -2"), new String[] {"-1", "-2", "+"});
+		assertArrayEquals(ShuntingYard.parse("-1 + --2"), new String[] {"-1", "--2", "+"});
+		assertArrayEquals(ShuntingYard.parse("-1 + +2"), new String[] {"-1", "+2", "+"});
+	}
+
+	@Test
 	public void testAssociations() {
 		assertArrayEquals(ShuntingYard.parse("1 + 2 + 3"), new String[] {"1", "2", "+", "3", "+"});
 		assertArrayEquals(ShuntingYard.parse("1 - 2 - 3"), new String[] {"1", "2", "-", "3", "-"});

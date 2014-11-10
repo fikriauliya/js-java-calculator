@@ -114,7 +114,7 @@ public class ShuntingYard {
     	if (isConstant(token)) return false;
     	if (isOperator(token)) return false;
 
-    	Pattern functionPattern = Pattern.compile("\\D\\S*");
+    	Pattern functionPattern = Pattern.compile("[a-zA-Z_]\\w*");
     	return functionPattern.matcher(token).matches();
     }
 }
