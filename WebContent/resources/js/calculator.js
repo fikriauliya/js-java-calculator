@@ -90,9 +90,9 @@ $(function() {
 		descriptionText = "";
 		refreshOutputs();
 	});
-	$("#fact").click(function() {
-		outputText += " fact(";
-		descriptionText = "<b>fact(number)</b>: Calculate factorial of a number";
+	$("#power_ten").click(function() {
+		outputText += " 10 ^ ";
+		descriptionText = "";
 		refreshOutputs();
 	});
 	$("#_7").click(function() {
