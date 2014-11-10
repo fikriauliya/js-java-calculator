@@ -32,7 +32,7 @@ $(function() {
 	}
 
 	var isOperator = function(s) {
-		return (s == "+" || s == "-" || s == "*" || s == "/");
+		return (s == "+" || s == "-" || s == "*" || s == "/" || s == "^");
 	}
 
 	$("#asin").click(function() {
@@ -56,7 +56,27 @@ $(function() {
 		refreshOutputs();
 	});
 	$("#backspace").click(function() {
-		outputText += "backspace";
+
+		var i = outputText.trim().length - 1;
+		var inp = outputText;
+		var prevTokenStart = -1;
+
+		while (i >= 0) {
+			if (inp.charAt(i) == " "){
+				prevTokenStart = i;
+				break;
+			}
+			i--;
+		}
+		// TODO: Handle invalid tokenPos
+
+		console.log(prevTokenStart);
+
+		inp = inp.substring(0, prevTokenStart);
+
+		console.log("[" + inp + "]");
+
+		outputText = inp;
 		descriptionText = "";
 		refreshOutputs();
 	});
@@ -234,68 +254,68 @@ $(function() {
 		var inp = $("#outputText").val();
 
 		//replace ^ to Math.pow
-		var powPos = inp.lastIndexOf(" ^ ");
-		while (powPos != -1) {
-			var i = powPos - 1;
-			var closeTagCount = 0;
-			var openTagCount = 0;
-
-			var prevTokenStart = -1;
-			var nextTokenEnd = inp.length;
-
-			while (i >= 0) {
-				if (inp.charAt(i) == ")") {
-					closeTagCount++;
-				} else if (inp.charAt(i) == "(") {
-					openTagCount++;
-				} else if ((inp.charAt(i) == " ") && (openTagCount == closeTagCount)){
-					prevTokenStart = i;
-					break;
-				}
-				i--;
-			}
-			var i = powPos + 3;
-			closeTagCount = 0;
-			openTagCount = 0;
-			while (i < inp.length) {
-				if (inp.charAt(i) == ")") {
-					closeTagCount++;
-				} else if (inp.charAt(i) == "(") {
-					openTagCount++;
-				} else if ((inp.charAt(i) == " ") && (openTagCount == closeTagCount)){
-					nextTokenEnd = i;
-					break;
-				}
-				i++;
-			}
-
-			// TODO: Handle invalid tokenPos
-
-			console.log(prevTokenStart);
-			console.log(nextTokenEnd);
-
-			inp1 = inp.substring(0, prevTokenStart + 1) + "Math.pow(" + inp.substring(prevTokenStart + 1, powPos) + ",";
-			inp2 = inp.substring(powPos + 3, nextTokenEnd) + ")" + inp.substring(nextTokenEnd);
-			inp = inp1 + inp2;
-
-			console.log("[" + inp + "]");
-			powPos = inp.lastIndexOf(" ^ ");
-		}
+//		var powPos = inp.lastIndexOf(" ^ ");
+//		while (powPos != -1) {
+//			var i = powPos - 1;
+//			var closeTagCount = 0;
+//			var openTagCount = 0;
+//
+//			var prevTokenStart = -1;
+//			var nextTokenEnd = inp.length;
+//
+//			while (i >= 0) {
+//				if (inp.charAt(i) == ")") {
+//					closeTagCount++;
+//				} else if (inp.charAt(i) == "(") {
+//					openTagCount++;
+//				} else if ((inp.charAt(i) == " ") && (openTagCount == closeTagCount)){
+//					prevTokenStart = i;
+//					break;
+//				}
+//				i--;
+//			}
+//			var i = powPos + 3;
+//			closeTagCount = 0;
+//			openTagCount = 0;
+//			while (i < inp.length) {
+//				if (inp.charAt(i) == ")") {
+//					closeTagCount++;
+//				} else if (inp.charAt(i) == "(") {
+//					openTagCount++;
+//				} else if ((inp.charAt(i) == " ") && (openTagCount == closeTagCount)){
+//					nextTokenEnd = i;
+//					break;
+//				}
+//				i++;
+//			}
+//
+//			// TODO: Handle invalid tokenPos
+//
+//			console.log(prevTokenStart);
+//			console.log(nextTokenEnd);
+//
+//			inp1 = inp.substring(0, prevTokenStart + 1) + "Math.pow(" + inp.substring(prevTokenStart + 1, powPos) + ",";
+//			inp2 = inp.substring(powPos + 3, nextTokenEnd) + ")" + inp.substring(nextTokenEnd);
+//			inp = inp1 + inp2;
+//
+//			console.log("[" + inp + "]");
+//			powPos = inp.lastIndexOf(" ^ ");
+//		}
 
 		inp = inp.replace(/ x /g, " * ");
-		inp = inp.replace(/ asin/g, " Math.asin");
-		inp = inp.replace(/ sin/g, " Math.sin");
-		inp = inp.replace(/ acos/g, " Math.acos");
-		inp = inp.replace(/ cos/g, " Math.cos");
-		inp = inp.replace(/ atan/g, " Math.atan");
-		inp = inp.replace(/ tan/g, " Math.tan");
-		inp = inp.replace(/ sqrt/g, " Math.sqrt");
-		inp = inp.replace(/ round/g, " Math.round");
-		inp = inp.replace(/ ceil/g, " Math.ceil");
-		inp = inp.replace(/ floor/g, " Math.floor");
-		inp = inp.replace(/ ln/g, " Math.log");
-		inp = inp.replace(/ e /g, " Math.E ");
-		inp = inp.replace(/ pi /g, " Math.PI ");
+//		inp = inp.replace(/ asin/g, " Math.asin");
+//		inp = inp.replace(/ sin/g, " Math.sin");
+//		inp = inp.replace(/ acos/g, " Math.acos");
+//		inp = inp.replace(/ cos/g, " Math.cos");
+//		inp = inp.replace(/ atan/g, " Math.atan");
+//		inp = inp.replace(/ tan/g, " Math.tan");
+//		inp = inp.replace(/ sqrt/g, " Math.sqrt");
+//		inp = inp.replace(/ round/g, " Math.round");
+//		inp = inp.replace(/ ceil/g, " Math.ceil");
+//		inp = inp.replace(/ floor/g, " Math.floor");
+//		inp = inp.replace(/ ln/g, " Math.log");
+//		inp = inp.replace(/ e /g, " Math.E ");
+//		inp = inp.replace(/ pi /g, " Math.PI ");
 
 		inp = inp.trim();
 		inp = inp.replace(/\s{2,}/g, " ");
@@ -312,14 +332,24 @@ $(function() {
 			spacePos = inp.indexOf(" ", spacePos + 1);
 		}
 
+		inp = inp.replace(/\(/g, " ( ");
+		inp = inp.replace(/\)/g, " ) ");
+		inp = inp.replace(/\*/g, " * ");
 		console.log(inp);
 		descriptionText = "";
 
 		try {
-			outputText = eval(inp);
+			$.post('rest/evaluator/calculate', {exp: inp}, function(data) {
+				console.log(data);
+				outputText = data;
+
+				refreshOutputs();
+			});
+//			outputText = eval(inp);
 		} catch (err) {
 			outputText = "Invalid";
+
+			refreshOutputs();
 		}
-		refreshOutputs();
 	});
 })
