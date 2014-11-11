@@ -18,7 +18,7 @@ public class ShuntingYard {
 
     	for (String token : infix.split("\\s")) {
     		if (isOperator(token)) {
-    			System.out.print("Operator: " + token);
+//    			System.out.print("Operator: " + token);
     			char operator = token.charAt(0);
     			int tokenPrecedence = getPrecendence(operator);
 
@@ -36,10 +36,10 @@ public class ShuntingYard {
 				}
 				operatorsStack.push(token);
     		} else if (token.equals("(")) {
-    			System.out.print("Bracket:" + token);
+//    			System.out.print("Bracket:" + token);
     			operatorsStack.push(token);
     		} else if (token.equals(")")) {
-    			System.out.print("Bracket:" + token);
+//    			System.out.print("Bracket:" + token);
 
 				if (operatorsStack.isEmpty()) {
 					throw new IllegalArgumentException("Mismatched parenthesis");
@@ -57,7 +57,7 @@ public class ShuntingYard {
     				res.add(operatorsStack.pop());
     			}
 			} else if (token.equals(",")) {
-				System.out.print("Separator: " + token);
+//				System.out.print("Separator: " + token);
 
 				if (operatorsStack.isEmpty()) {
 					throw new IllegalArgumentException("Mismatched parenthesis");
@@ -70,15 +70,15 @@ public class ShuntingYard {
 					}
 				}
 			} else if (isFunction(token)) {
-				System.out.print("Function: " + token);
+//				System.out.print("Function: " + token);
 				operatorsStack.push(token);
 			} else {
-				System.out.print("Number: " + token);
+//				System.out.print("Number: " + token);
 				res.add(token);
     		}
 
-    		System.out.print(" | " + CommonUtilities.listToString(operatorsStack));
-    		System.out.println(" | " + CommonUtilities.listToString(res));
+//    		System.out.print(" | " + CommonUtilities.listToString(operatorsStack));
+//    		System.out.println(" | " + CommonUtilities.listToString(res));
     	}
 
     	while (!operatorsStack.isEmpty()) {
@@ -87,7 +87,7 @@ public class ShuntingYard {
     		res.add(operatorsStack.pop());
     	}
 
-    	System.out.println("= " + CommonUtilities.listToString(res));
+//    	System.out.println("= " + CommonUtilities.listToString(res));
     	return res.toArray(new String[0]);
     }
 

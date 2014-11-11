@@ -36,7 +36,7 @@ public class Evaluator {
 			Stack<BigDecimal> s = new Stack<BigDecimal>();
 
 			for (String token : postFix) {
-				System.out.println(token);
+//				System.out.println(token);
 				try {
 					BigDecimal number = new BigDecimal(token);
 					s.push(number);
@@ -191,11 +191,11 @@ public class Evaluator {
 						s.push(new BigDecimal(Double.toString(res)));
 					}
 				}
-				System.out.println(CommonUtilities.listToString(s));
+//				System.out.println(CommonUtilities.listToString(s));
 			}
 			String res = s.pop().stripTrailingZeros().toPlainString();
 
-			System.out.println("== " + res);
+//			System.out.println("== " + res);
 			Pattern p1 = Pattern.compile("(^\\d+\\.\\d*?)0+$");
 			Matcher m1 = p1.matcher(res);
 			if (m1.matches()) {
@@ -216,7 +216,7 @@ public class Evaluator {
 			} else if (ex.getMessage().equals("Division undefined")) {
 				throw new IllegalArgumentException("Result is undefined");
 			} else {
-				System.out.println(ex.getMessage());
+//				System.out.println(ex.getMessage());
 				throw new IllegalArgumentException("Invalid");
 			}
 		} catch (NumberFormatException ex) {
