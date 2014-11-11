@@ -13,7 +13,7 @@
       <ui:define name="content">
         <!-- Main component for a primary marketing message or call to action -->
         <div class="row">
-          <div class="col-md-12">
+          <div class="col-md-8">
             <input id="outputText" type="text" style="width: 100%;" readonly="readonly"></input>
             <br/><br/>
             <label class="radio-inline">
@@ -49,8 +49,8 @@
               <tr>
                 <td><button id="atan" type="button" class="btn btn-success">atan</button></td>
                 <td><button id="tan" type="button" class="btn btn-success">tan</button></td>
-                <td><button id="sqrt" type="button" class="btn btn-success"><sup>2</sup>&radic;</button></td>
-                <td><button id="root" type="button" class="btn btn-success"><sup>y</sup>&radic;x</button></td>
+                <td><button id="sqrt" type="button" class="btn btn-success"><sup>2</sup>&radic;x</button></td>
+                <td><button id="cbrt" type="button" class="btn btn-success"><sup>3</sup>&radic;x</button></td>
                 <td><button id="_4" type="button" class="btn btn-default">4</button></td>
                 <td><button id="_5" type="button" class="btn btn-default">5</button></td>
                 <td><button id="_6" type="button" class="btn btn-default">6</button></td>
@@ -71,13 +71,18 @@
                 <td><button id="floor" type="button" class="btn btn-success">floor</button></td>
                 <td><button id="ln" type="button" class="btn btn-success">ln</button></td>
                 <td><button id="e" type="button" class="btn btn-default">e</button></td>
-                <td><button id="comma" type="button" class="btn btn-warning">,</button></td>
-                <td><button id="_0" type="button" class="btn btn-default">0</button></td>
+                <td colspan="2"><button id="_0" type="button" class="btn btn-default">0</button></td>
                 <td><button id="dot" type="button" class="btn btn-default">.</button></td>
                 <td><button id="calculate" type="button" class="btn btn-primary">=</button></td>
               </tr>
             </tbody>
           </table>
+          </div>
+          <div class="col-md-4">
+            <h4>History</h4>
+            <div><button id="btnClear" class="btn btn-danger" style="width:100px">Clear</button></div>
+            <br/>
+            <textarea id="resultLogs" style="width:100%; height: 300px"></textarea>
           </div>
         </div>
       </ui:define>

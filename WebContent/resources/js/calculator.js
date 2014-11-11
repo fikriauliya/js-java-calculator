@@ -47,7 +47,7 @@ $(function() {
 			i--;
 		}
 
-		inp = inp.substring(0, prevTokenStart);
+		inp = inp.substring(0, prevTokenStart + 1);
 
 		outputText = inp;
 		descriptionText = "";
@@ -123,9 +123,9 @@ $(function() {
 		descriptionText = "<b>sqrt(number)</b>: Calculate square root of a number";
 		refreshOutputs();
 	});
-	$("#root").click(function() {
-		outputText += " root(";
-		descriptionText = "<b>root(number, degree)</b>: Calculate <b><i>degree</i></b>-th root of a <b><i>number</i></b>";
+	$("#cbrt").click(function() {
+		outputText += " cbrt(";
+		descriptionText = "<b>cbrt(number)</b>: Calculate cube root of a number";
 		refreshOutputs();
 	});
 	$("#_4").click(function() {
@@ -223,8 +223,19 @@ $(function() {
 		descriptionText = "";
 		refreshOutputs();
 	});
+
+	$("#btnClear").click(function() {
+		$('#resultLogs').val('');
+	});
+
+	var prependLog = function(log) {
+		$('#resultLogs').val(log + '\n' + $('#resultLogs').val());
+	}
+
 	$("#calculate").click(function() {
 		var inp = $("#outputText").val();
+		prependLog("");
+		prependLog("Q: " + inp.trim());
 
 		inp = inp.replace(/ x /g, " * ");
 		inp = inp.trim();
@@ -246,14 +257,13 @@ $(function() {
 		inp = inp.replace(/\)/g, " ) ");
 		inp = inp.replace(/\*/g, " * ");
 		inp = inp.replace(/,/g, " , ");
-		console.log(inp);
+//		console.log(inp);
 		descriptionText = "";
 
 		try {
 			var isRadian = $('#radOpt').prop("checked");
-			console.log(isRadian);
 			$.post('rest/evaluator/calculate', {exp: inp, isRadian: isRadian}, function(data) {
-				console.log(data);
+				prependLog("A: " + data.trim());
 				outputText = data;
 
 				refreshOutputs();

@@ -9,6 +9,10 @@ import jp.co.worksap.calculator.utils.CommonUtilities;
 
 public class ShuntingYard {
 	public static String[] parse(String infix) {
+		if (infix.trim().length() == 0) {
+			return new String[0];
+		}
+
     	List<String> res = new LinkedList<String>();
     	Stack<String> operatorsStack = new Stack<String>();
 

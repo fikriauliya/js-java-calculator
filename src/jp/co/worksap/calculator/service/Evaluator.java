@@ -29,36 +29,9 @@ public class Evaluator {
 		return f;
 	}
 
-	private static final BigDecimal SQRT_DIG = new BigDecimal(50);
-	private static final BigDecimal SQRT_PRE = new BigDecimal(10).pow(SQRT_DIG
-			.intValue());
-
-//	private static BigDecimal rootNewtonRaphson(BigDecimal a, int n,
-//			BigDecimal xn, BigDecimal precision) {
-//		if (a.compareTo(BigDecimal.ZERO) == 0) return BigDecimal.ZERO;
-//
-//		int MAX_LOOP = 500;
-//		int i = 0;
-//		while (i++ < MAX_LOOP) {
-//			BigDecimal fx = xn.pow(n).add(a.negate());
-//			BigDecimal fpx = xn.pow(n - 1).multiply(new BigDecimal(n));
-//			BigDecimal xn1 = fx.divide(fpx, 2 * SQRT_DIG.intValue(),
-//					RoundingMode.HALF_DOWN);
-//			xn1 = xn.add(xn1.negate());
-//			BigDecimal currentRes = xn1.pow(n);
-//			BigDecimal currentPrecision = currentRes.subtract(a);
-//			currentPrecision = currentPrecision.abs();
-//			if (currentPrecision.compareTo(precision) <= -1) {
-//				return xn1.round(new MathContext(100));
-//			}
-//
-//			xn = xn1;
-//		}
-//
-//		return xn;
-//	}
-
 	public static String calculate(String[] postFix, boolean isRadian) {
+		if (postFix.length == 0) { return "0"; }
+
 		try {
 			Stack<BigDecimal> s = new Stack<BigDecimal>();
 
@@ -79,7 +52,7 @@ public class Evaluator {
 					} else if (token.equals("*")) {
 						BigDecimal operand2 = s.pop();
 						BigDecimal operand1 = s.pop();
-						s.push(operand1.multiply(operand2));
+						s.push(operand1.multiply(operand2).setScale(90, RoundingMode.HALF_DOWN));
 					} else if (token.equals("/")) {
 						BigDecimal operand2 = s.pop();
 						BigDecimal operand1 = s.pop();
@@ -87,7 +60,7 @@ public class Evaluator {
 						if (operand2.compareTo(BigDecimal.ZERO) == 0 && operand1.compareTo(BigDecimal.ZERO) == 0) {
 							throw new IllegalArgumentException("Result is undefined");
 						}
-						s.push(operand1.divide(operand2, 100, RoundingMode.HALF_DOWN));
+						s.push(operand1.divide(operand2, 100, RoundingMode.HALF_UP).setScale(100, RoundingMode.HALF_UP));
 					} else if (token.equals("+")) {
 						BigDecimal operand2 = s.pop();
 						BigDecimal operand1 = s.pop();
@@ -113,7 +86,7 @@ public class Evaluator {
 							if (res.isNaN()) {
 								throw new IllegalArgumentException("Invalid exponent");
 							} else if (res.isInfinite()) {
-								throw new IllegalArgumentException("Exponent is too big");
+								throw new IllegalArgumentException("Exponent is too big or invalid exponent");
 							}
 							s.push(new BigDecimal(res.toString()));
 						}
@@ -121,55 +94,55 @@ public class Evaluator {
 						BigDecimal operand1 = s.pop();
 
 						if (isRadian) {
-							s.push((new BigDecimal(Double.toString(Math.sin(operand1.doubleValue())))).setScale(14, BigDecimal.ROUND_HALF_UP));
+							s.push((new BigDecimal(Double.toString(Math.sin(operand1.doubleValue())))).setScale(14, RoundingMode.HALF_UP));
 						} else {
-							s.push((new BigDecimal(Double.toString(Math.sin(Math.toRadians(operand1.doubleValue()))))).setScale(14, BigDecimal.ROUND_HALF_UP));
+							s.push((new BigDecimal(Double.toString(Math.sin(Math.toRadians(operand1.doubleValue()))))).setScale(14, RoundingMode.HALF_UP));
 						}
 
 					} else if (token.equals("cos")) {
 						BigDecimal operand1 = s.pop();
 						if (isRadian) {
-							s.push((new BigDecimal(Double.toString(Math.cos(operand1.doubleValue())))).setScale(14, BigDecimal.ROUND_HALF_UP));
+							s.push((new BigDecimal(Double.toString(Math.cos(operand1.doubleValue())))).setScale(14, RoundingMode.HALF_UP));
 						} else {
-							s.push((new BigDecimal(Double.toString(Math.cos(Math.toRadians(operand1.doubleValue()))))).setScale(14, BigDecimal.ROUND_HALF_UP));
+							s.push((new BigDecimal(Double.toString(Math.cos(Math.toRadians(operand1.doubleValue()))))).setScale(14, RoundingMode.HALF_UP));
 						}
 					} else if (token.equals("tan")) {
 						BigDecimal operand1 = s.pop();
 						BigDecimal opSin, opCos;
 
 						if (isRadian) {
-							opSin = new BigDecimal(Double.toString(Math.sin(operand1.doubleValue()))).setScale(15, BigDecimal.ROUND_HALF_UP);
-							opCos = new BigDecimal(Double.toString(Math.cos(operand1.doubleValue()))).setScale(15, BigDecimal.ROUND_HALF_UP);
+							opSin = new BigDecimal(Double.toString(Math.sin(operand1.doubleValue()))).setScale(15, RoundingMode.HALF_UP);
+							opCos = new BigDecimal(Double.toString(Math.cos(operand1.doubleValue()))).setScale(15, RoundingMode.HALF_UP);
 						} else {
-							opSin = new BigDecimal(Double.toString(Math.sin(Math.toRadians(operand1.doubleValue())))).setScale(15, BigDecimal.ROUND_HALF_UP);
-							opCos = new BigDecimal(Double.toString(Math.cos(Math.toRadians(operand1.doubleValue())))).setScale(15, BigDecimal.ROUND_HALF_UP);
+							opSin = new BigDecimal(Double.toString(Math.sin(Math.toRadians(operand1.doubleValue())))).setScale(15, RoundingMode.HALF_UP);
+							opCos = new BigDecimal(Double.toString(Math.cos(Math.toRadians(operand1.doubleValue())))).setScale(15, RoundingMode.HALF_UP);
 						}
 
 						if (opCos.compareTo(BigDecimal.ZERO) == 0) {
 							throw new IllegalArgumentException("tan result is infinite");
 						}
-						s.push(opSin.divide(opCos, 14, RoundingMode.HALF_DOWN));
+						s.push(opSin.divide(opCos, 14, RoundingMode.HALF_UP));
 					} else if (token.equals("asin")) {
 						BigDecimal operand1 = s.pop();
 
 						if (isRadian) {
-							s.push((new BigDecimal(Double.toString(Math.asin(operand1.doubleValue())))).setScale(15, BigDecimal.ROUND_HALF_UP));
+							s.push((new BigDecimal(Double.toString(Math.asin(operand1.doubleValue())))).setScale(15, RoundingMode.HALF_UP));
 						} else {
-							s.push((new BigDecimal(Double.toString(Math.toDegrees(Math.asin(operand1.doubleValue()))))).setScale(15, BigDecimal.ROUND_HALF_UP));
+							s.push((new BigDecimal(Double.toString(Math.toDegrees(Math.asin(operand1.doubleValue()))))).setScale(15, RoundingMode.HALF_UP));
 						}
 					} else if (token.equals("acos")) {
 						BigDecimal operand1 = s.pop();
 						if (isRadian) {
-							s.push((new BigDecimal(Double.toString(Math.acos(operand1.doubleValue())))).setScale(15, BigDecimal.ROUND_HALF_UP));
+							s.push((new BigDecimal(Double.toString(Math.acos(operand1.doubleValue())))).setScale(15, RoundingMode.HALF_UP));
 						} else {
-							s.push((new BigDecimal(Double.toString(Math.toDegrees(Math.acos(operand1.doubleValue()))))).setScale(15, BigDecimal.ROUND_HALF_UP));
+							s.push((new BigDecimal(Double.toString(Math.toDegrees(Math.acos(operand1.doubleValue()))))).setScale(15, RoundingMode.HALF_UP));
 						}
 					} else if (token.equals("atan")) {
 						BigDecimal operand1 = s.pop();
 						if (isRadian) {
-							s.push((new BigDecimal(Double.toString(Math.atan(operand1.doubleValue())))).setScale(15, BigDecimal.ROUND_HALF_UP));
+							s.push((new BigDecimal(Double.toString(Math.atan(operand1.doubleValue())))).setScale(15, RoundingMode.HALF_UP));
 						} else {
-							s.push((new BigDecimal(Double.toString(Math.toDegrees(Math.atan(operand1.doubleValue()))))).setScale(15, BigDecimal.ROUND_HALF_UP));
+							s.push((new BigDecimal(Double.toString(Math.toDegrees(Math.atan(operand1.doubleValue()))))).setScale(15, RoundingMode.HALF_UP));
 						}
 					} else if (token.equals("round")) {
 						BigDecimal operand1 = s.pop();
@@ -191,22 +164,13 @@ public class Evaluator {
 					} else if (token.equals("sqrt")) {
 						BigDecimal operand1 = s.pop();
 						if (operand1.compareTo(BigDecimal.ZERO) == -1) {
-							throw new IllegalArgumentException("Root of negative is undefined");
+							throw new IllegalArgumentException("Square root of negative is undefined");
 						}
-						s.push(new BigDecimal(Double.toString(Math.pow(operand1.doubleValue(), 0.5))).setScale(15, BigDecimal.ROUND_HALF_UP));
-					} else if (token.equals("root")) {
-						BigDecimal operand2 = s.pop();
+						s.push(new BigDecimal(Double.toString(Math.sqrt(operand1.doubleValue()))).setScale(15, RoundingMode.HALF_UP));
+					} else if (token.equals("cbrt")) {
 						BigDecimal operand1 = s.pop();
 
-						if (operand1.compareTo(BigDecimal.ZERO) == -1) {
-							throw new IllegalArgumentException("Root of negative is undefined");
-						}
-
-						if (operand2.compareTo(BigDecimal.ZERO) == 0) {
-							throw new IllegalArgumentException("Root with base 0 is undefined");
-						} else {
-							s.push(new BigDecimal(Double.toString(Math.pow(operand1.doubleValue(), 1/operand2.doubleValue()))).setScale(15, BigDecimal.ROUND_HALF_UP));
-						}
+						s.push(new BigDecimal(Double.toString(Math.cbrt(operand1.doubleValue()))).setScale(15, RoundingMode.HALF_UP));
 					} else if (token.equals("log")) {
 						BigDecimal operand1 = s.pop();
 						Double res = Math.log10(operand1.doubleValue());
@@ -256,7 +220,6 @@ public class Evaluator {
 				throw new IllegalArgumentException("Invalid");
 			}
 		} catch (NumberFormatException ex) {
-			System.out.println(ex.getMessage());
 			throw new IllegalArgumentException("Invalid");
 		}
 	}
