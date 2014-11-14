@@ -187,7 +187,7 @@ $(function() {
 		refreshOutputs();
 	});
 	$("#substract").click(function() {
-		inp = $('#outputText').val().trim();
+		var inp = $('#outputText').val().trim();
 		var prevIsOperator = false;
 
 		if (inp.length == 0) prevIsOperator = true;
@@ -276,7 +276,7 @@ $(function() {
 		inp = inp.replace(/\*/g, " * ");
 		inp = inp.replace(/,/g, " , ");
 		descriptionText = "";
-		console.log(inp);
+//		console.log(inp);
 
 		try {
 			var isRadian = $('#radOpt').prop("checked");
