@@ -274,4 +274,52 @@ $(function() {
 			refreshOutputs();
 		}
 	});
+
+	$(document).keypress(function(event) {
+		c = event.which;
+		if (c >= 48 && c <= 57) {
+			$("#_" + (c-48)).click();
+		} else {
+			switch (c) {
+				case 42: $('#mult').click(); break;
+				case 45: $('#substract').click(); break;
+				case 45: $('#negate').click(); break;
+				case 43: $('#add').click(); break;
+				case 94: $('#exp').click(); break;
+				case 47: $('#div').click(); break;
+				case 37: $('#mod').click(); break;
+				case 46: $('#dot').click(); break;
+				case 40: $('#lb').click(); break;
+				case 41: $('#rb').click(); break;
+
+				case 115: $('#sin').click(); break;
+				case 99: $('#cos').click(); break;
+				case 116: $('#tan').click(); break;
+				case 83: $('#asin').click(); break;
+				case 67: $('#acos').click(); break;
+				case 84: $('#atan').click(); break;
+			}
+		}
+	});
+
+	$(document).keyup(function(event) {
+		switch (event.which) {
+			case 27: $('#clear').click(); break;
+			case 13: $('#calculate').click(); break;
+			case 77: $('#mod').click(); break;
+			case 70: $('#floor').click(); break;
+			case 82: $('#round').click(); break;
+			case 73: $('#ceil').click(); break;
+			case 76: $('#log').click(); break;
+			case 78: $('#ln').click(); break;
+			case 80: $('#pi').click(); break;
+			case 69: $('#e').click(); break;
+		}
+	});
+
+	$(document).keydown(function(event){
+		switch (event.which) {
+			case 8: $('#backspace').click(); event.preventDefault(); break;
+		}
+	});
 })
