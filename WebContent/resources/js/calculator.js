@@ -58,11 +58,6 @@ $(function() {
 		descriptionText = "";
 		refreshOutputs();
 	});
-	$("#negate").click(function() {
-		outputText += "-";
-		descriptionText = "";
-		refreshOutputs();
-	});
 	$("#add").click(function() {
 		outputText += " + ";
 		descriptionText = "";
@@ -184,7 +179,20 @@ $(function() {
 		refreshOutputs();
 	});
 	$("#substract").click(function() {
-		outputText += " - ";
+		inp = $('#outputText').val().trim();
+		var prevIsOperator = false;
+
+		if (inp.length == 0) prevIsOperator = true;
+		switch (inp.charAt(inp.length - 1)) {
+			case '+': case '-': case 'x': case '/': case '%': case '^': case '(':
+				prevIsOperator = true; break;
+		}
+
+		if (prevIsOperator) {
+			outputText += "-";
+		} else {
+			outputText += " - ";
+		}
 		descriptionText = "";
 		refreshOutputs();
 	});
@@ -283,7 +291,6 @@ $(function() {
 			switch (c) {
 				case 42: $('#mult').click(); break;
 				case 45: $('#substract').click(); break;
-				case 45: $('#negate').click(); break;
 				case 43: $('#add').click(); break;
 				case 94: $('#exp').click(); break;
 				case 47: $('#div').click(); break;
