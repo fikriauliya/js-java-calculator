@@ -13,18 +13,26 @@ $(function() {
 		return (s == "+" || s == "-" || s == "*" || s == "/" || s == "^");
 	}
 
+	var addSpace = function() {
+		var inp =  $('#outputText').val();
+		if (inp.length > 0 && inp.charAt(inp.length - 1) == '-') {
+			return '';
+		}
+		return ' ';
+	}
+
 	$("#asin").click(function() {
-		outputText += " asin(";
+		outputText += addSpace() + "asin(";
 		descriptionText = "<b>asin(number)</b>: Calculate arcsine of a number"
 		refreshOutputs();
 	});
 	$("#sin").click(function() {
-		outputText += " sin(";
+		outputText += addSpace() + "sin(";
 		descriptionText = "<b>sin(number)</b>: Calculate sine of a number"
 		refreshOutputs();
 	});
 	$("#lb").click(function() {
-		outputText += " (";
+		outputText += addSpace() + "(";
 		descriptionText = "";
 		refreshOutputs();
 	});
@@ -64,12 +72,12 @@ $(function() {
 		refreshOutputs();
 	});
 	$("#acos").click(function() {
-		outputText += " acos(";
+		outputText += addSpace() + "acos(";
 		descriptionText = "<b>acos(number)</b>: Calculate arccos of a number";
 		refreshOutputs();
 	});
 	$("#cos").click(function() {
-		outputText += " cos(";
+		outputText += addSpace() + "cos(";
 		descriptionText = "<b>cos(number)</b>: Calculate cos of a number";
 		refreshOutputs();
 	});
@@ -104,22 +112,22 @@ $(function() {
 		refreshOutputs();
 	});
 	$("#atan").click(function() {
-		outputText += " atan(";
+		outputText += addSpace() + "atan(";
 		descriptionText = "<b>atan(number)</b>: Calculate arctan of a number";
 		refreshOutputs();
 	});
 	$("#tan").click(function() {
-		outputText += " tan(";
+		outputText += addSpace() + "tan(";
 		descriptionText = "<b>tan(number)</b>: Calculate tan of a number";
 		refreshOutputs();
 	});
 	$("#sqrt").click(function() {
-		outputText += " sqrt(";
+		outputText += addSpace() + "sqrt(";
 		descriptionText = "<b>sqrt(number)</b>: Calculate square root of a number";
 		refreshOutputs();
 	});
 	$("#cbrt").click(function() {
-		outputText += " cbrt(";
+		outputText += addSpace() + "cbrt(";
 		descriptionText = "<b>cbrt(number)</b>: Calculate cube root of a number";
 		refreshOutputs();
 	});
@@ -144,7 +152,7 @@ $(function() {
 		refreshOutputs();
 	});
 	$("#round").click(function() {
-		outputText += " round(";
+		outputText += addSpace() + "round(";
 		descriptionText = "<b>round(number)</b>: Calculate rounding of a number";
 		refreshOutputs();
 	});
@@ -154,12 +162,12 @@ $(function() {
 		refreshOutputs();
 	});
 	$("#log").click(function() {
-		outputText += " log(";
+		outputText += addSpace() + "log(";
 		descriptionText = "<b>log(number)</b>: Calculate log of a number";
 		refreshOutputs();
 	});
 	$("#pi").click(function() {
-		outputText += " pi ";
+		outputText += addSpace() + "pi ";
 		descriptionText = "";
 		refreshOutputs();
 	});
@@ -197,22 +205,22 @@ $(function() {
 		refreshOutputs();
 	});
 	$("#ceil").click(function() {
-		outputText += " ceil(";
+		outputText += addSpace() + "ceil(";
 		descriptionText = "<b>ceil(number)</b>: Calculate ceil of a number";
 		refreshOutputs();
 	});
 	$("#floor").click(function() {
-		outputText += " floor(";
+		outputText += addSpace() + "floor(";
 		descriptionText = "<b>floor(number)</b>: Calculate floor of a number";
 		refreshOutputs();
 	});
 	$("#ln").click(function() {
-		outputText += " ln(";
+		outputText += addSpace() + "ln(";
 		descriptionText = "<b>ln(number)</b>: Calculate log of a number";
 		refreshOutputs();
 	});
 	$("#e").click(function() {
-		outputText += " e ";
+		outputText += addSpace() + "e ";
 		descriptionText = "";
 		refreshOutputs();
 	});
@@ -261,12 +269,14 @@ $(function() {
 			spacePos = inp.indexOf(" ", spacePos + 1);
 		}
 
-		inp = inp.replace(/\(/g, " ( ");
+		inp = inp.replace(/([^\\-])\(/g, "$1 ( ");
+		inp = inp.replace(/^\(/g, "( ");
+		inp = inp.replace(/[\\-]\(/g, "-( ");
 		inp = inp.replace(/\)/g, " ) ");
 		inp = inp.replace(/\*/g, " * ");
 		inp = inp.replace(/,/g, " , ");
-//		console.log(inp);
 		descriptionText = "";
+		console.log(inp);
 
 		try {
 			var isRadian = $('#radOpt').prop("checked");

@@ -35,6 +35,9 @@ public class ShuntingYard {
 					}
 				}
 				operatorsStack.push(token);
+    		} else if (token.equals("-(")) {
+    			operatorsStack.push("negate");
+    			operatorsStack.push("(");
     		} else if (token.equals("(")) {
 //    			System.out.print("Bracket:" + token);
     			operatorsStack.push(token);
@@ -111,14 +114,14 @@ public class ShuntingYard {
     }
 
     private static boolean isConstant(String token) {
-    	return token.equals("pi") || token.equals("e");
+    	return token.equals("pi") || token.equals("e") || token.equals("-pi") || token.equals("-e");
     }
 
     private static boolean isFunction(String token) {
     	if (isConstant(token)) return false;
     	if (isOperator(token)) return false;
 
-    	Pattern functionPattern = Pattern.compile("[a-zA-Z_]\\w*");
+    	Pattern functionPattern = Pattern.compile("\\-?[a-zA-Z_]\\w*");
     	return functionPattern.matcher(token).matches();
     }
 }
