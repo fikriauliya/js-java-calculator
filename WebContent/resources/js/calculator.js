@@ -329,4 +329,8 @@ $(function() {
 			case 8: $('#backspace').click(); event.preventDefault(); break;
 		}
 	});
+
+	$('button').focus(function(){
+		$(this).blur();
+	});
 })
